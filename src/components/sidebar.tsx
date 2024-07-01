@@ -88,8 +88,8 @@ export default function Sidebar({
                 isCollapsed ? "invisible w-0" : "visible w-auto"
               }`}
             >
-              <span className="font-medium">Shadcn Admin</span>
-              <span className="text-xs">Vite + ShadcnUI</span>
+              <span className="font-medium">MotherLove</span>
+              <span className="text-xs">Maternity and Baby Milk Store</span>
             </div>
           </div>
 

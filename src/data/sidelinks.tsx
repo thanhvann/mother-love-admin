@@ -66,15 +66,9 @@ export const sidelinks: SideLink[] = [
     icon: <IconUserShield size={18} />,
     sub: [
       {
-        title: "Sign In (email + password)",
-        label: "",
-        href: "/sign-in",
-        icon: <IconHexagonNumber1 size={18} />,
-      },
-      {
         title: "Sign In (Box)",
         label: "",
-        href: "/sign-in-2",
+        href: "/login",
         icon: <IconHexagonNumber2 size={18} />,
       },
       {
@@ -82,18 +76,6 @@ export const sidelinks: SideLink[] = [
         label: "",
         href: "/sign-up",
         icon: <IconHexagonNumber3 size={18} />,
-      },
-      {
-        title: "Forgot Password",
-        label: "",
-        href: "/forgot-password",
-        icon: <IconHexagonNumber4 size={18} />,
-      },
-      {
-        title: "OTP",
-        label: "",
-        href: "/otp",
-        icon: <IconHexagonNumber5 size={18} />,
       },
     ],
   },

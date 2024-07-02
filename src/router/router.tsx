@@ -4,7 +4,9 @@ import Dashboard from "./../pages/dashboard";
 import Login from "@/pages/auth/Login";
 import { useAuth } from "@/context/AuthContext";
 import { Products } from "@/pages/products/Products";
+import Vouchers from "@/pages/vouchers/Vouchers";
 import { AddProduct } from "@/pages/products/product-detail/add-product-form";
+import AddVoucher from "@/pages/vouchers/components/voucher-detail/add-voucher-form";
 
 const PrivateRoute = ({ element, ...rest }: any) => {
   const { isLoggedIn } = useAuth();
@@ -23,7 +25,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <PrivateRoute />,
+    element: <AppShell />,
     children: [
       {
         index: true,
@@ -37,6 +39,15 @@ const router = createBrowserRouter([
         path: "/admin/new",
         element: <AddProduct />,
       },
+      {
+        path: "/admin/vouchers",
+        element: <Vouchers />,
+      },
+      {
+        path: "/admin/vouchers/new",
+        element: <AddVoucher />,
+      },
+      
     ],
   },
 ]);

@@ -60,6 +60,12 @@ export const sidelinks: SideLink[] = [
     href: "/admin/brand",
     icon: <IconMilk size={18} />,
   },
+  {
+    title: "Vouchers",
+    label: "",
+    href: "/admin/vouchers",
+    icon: <IconMilk size={18} />,
+  },
   // {
   //   title: "Authentication",
   //   label: "",

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { VoucherObj } from "@/models/Voucher";
+import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
@@ -35,8 +34,8 @@ axiosInstance.interceptors.response.use(
     await sleep();
     return response;
   },
-  (error: AxiosError) => {
-    const { data, status } = error.response as AxiosResponse;
+  (error) => {
+    const { data, status } = error.response;
     switch (status) {
       case 400:
         if (data.errors) {
@@ -51,13 +50,8 @@ axiosInstance.interceptors.response.use(
         toast.error(data.title);
         break;
       case 401:
-        toast.error(data.title);
-        break;
       case 404:
-        toast.error(data.title);
-        break;
       case 500:
-        // router.navigate("/server-error", { state: { error: data } });
         toast.error(data.title);
         break;
       default:
@@ -98,7 +92,11 @@ const Voucher = {
   list: createListEndpoint("vouchers", "voucherId"),
   getMemberVouchers: (userId: number) => requests.get(`vouchers/member?userId=${userId}`),
   addVoucherForMember: (userId: number, voucherId: number) => requests.post(`vouchers/member?userId=${userId}&voucherId=${voucherId}`, {}),
+  addVoucher: (voucher: any) => requests.post("vouchers", voucher),
+  updateVoucher: (voucher: any) => requests.put("vouchers", voucher),
+  deleteVoucher: (voucherId: number) => requests.delete(`vouchers/${voucherId}`),
 };
+
 
 const Address = {
   listByUserId: (userId: number, pageNo: number, pageSize: number) => {
@@ -110,7 +108,7 @@ const Address = {
   updateAddress: (addressId: number, updatedAddress: any) => {
     return requests.put(`address`, updatedAddress);
   },
-  addNewAddress: (newAddress: any) => requests.post(`http://localhost:8080/api/v1/address`, newAddress),
+  addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
 };
 
 const agent = {

@@ -80,15 +80,6 @@ export default function EditDialog({ product }: EditProps) {
 
   const onSubmit = async (values: editSchemaType) => {
     try {
-      const isTokenValid = await refreshTokenIfNeeded();
-      if (!isTokenValid) {
-        toast({
-          title: "Session expired. Please login again.",
-        });
-        navigate("/login");
-        return;
-      }
-
       await agent.Products.updateMilk(values);
       toast({
         title: "Update Product successfully!",

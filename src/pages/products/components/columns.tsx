@@ -122,11 +122,11 @@ export const columns: ColumnDef<ProductColumn>[] = [
     },
   },
   {
-    accessorKey: "category.categoryId",
+    accessorKey: "category.categoryName",
     header: "Category",
   },
   {
-    accessorKey: "brand.brandId",
+    accessorKey: "brand.brandName",
     header: "Brand",
   },
   {

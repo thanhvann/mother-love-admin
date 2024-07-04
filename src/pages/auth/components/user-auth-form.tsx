@@ -2,7 +2,14 @@ import { HTMLAttributes, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/custom/button";
 import { PasswordInput } from "@/components/custom/password-input";
@@ -49,7 +56,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       // Check user role after successful login
       const userInfo = await getUserInfo();
       if (userInfo) {
-        if (userInfo.roleName === "ROLE_STAFF" || userInfo.roleName === "ROLE_ADMIN") {
+        if (
+          userInfo.roleName === "ROLE_STAFF" ||
+          userInfo.roleName === "ROLE_ADMIN"
+        ) {
           // User has permission, navigate to admin page
           navigate("/admin");
         } else {
@@ -78,9 +88,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 <FormItem className="space-y-1">
                   <FormLabel>Username, Email, or Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username, email, or phone number" {...field} />
+                    <Input
+                      placeholder="Enter your username, email, or phone number"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage>{form.formState.errors.userNameOrEmailOrPhone?.message}</FormMessage>
+                  <FormMessage>
+                    {form.formState.errors.userNameOrEmailOrPhone?.message}
+                  </FormMessage>
                 </FormItem>
               )}
             />
@@ -95,12 +110,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                   <FormControl>
                     <PasswordInput placeholder="********" {...field} />
                   </FormControl>
-                  <FormMessage>{form.formState.errors.password?.message}</FormMessage>
+                  <FormMessage>
+                    {form.formState.errors.password?.message}
+                  </FormMessage>
                 </FormItem>
               )}
             />
             {error && <p className="text-red-500 text-center">{error}</p>}
-            <Button className="mt-2" loading={isLoading}>
+            <Button className="my-3" loading={isLoading}>
               Login
             </Button>
           </div>

@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/custom/button'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/custom/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,25 +9,50 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import { User } from "@/models/User";
 
 export function UserNav() {
+  const { isLoggedIn, logout, getUserInfo } = useAuth();
+  const [userInfo, setUserInfo] = useState<User>();
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const userInfo = await getUserInfo();
+        if (userInfo) {
+          setUserInfo(userInfo);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchUserInfo();
+    }
+  }, [isLoggedIn, getUserInfo]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
-          <Avatar className='h-8 w-8'>
-            <AvatarImage src='/avatars/01.png' alt='@shadcn' />
-            <AvatarFallback>SN</AvatarFallback>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='w-56' align='end' forceMount>
-        <DropdownMenuLabel className='font-normal'>
-          <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>satnaing</p>
-            <p className='text-xs leading-none text-muted-foreground'>
-              satnaingdev@gmail.com
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">
+              {userInfo?.fullName} |{" "}
+              {userInfo?.roleName === "ROLE_STAFF" ? "STAFF" : "ADMIN"}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {userInfo?.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -54,5 +79,5 @@ export function UserNav() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

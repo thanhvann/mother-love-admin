@@ -88,11 +88,24 @@ const Products = {
 
 const Brand = {
   list: createListEndpoint("brand", "brandId"),
-};
+  updateBrand: (brand: any) => requests.put("brand/update", brand),
+  addBrand: (brand: any) => requests.post("brand",brand),
+  delete: (brandId: number) => requests.delete(`brand/delete/${brandId}`)
+  };
 
 const Category = {
   list: createListEndpoint("categories", "categoryId"),
+  updateCategory: (category: any) => requests.put("categories", category),
+  addCategory: (category: any) => requests.post("categories", category),
+  delete: (categoryId: number) => requests.delete(`categories/${categoryId}`)
 };
+const Blog = {
+  list: createListEndpoint("blogs", "blogId"),
+  updateBlog: (blog: any) => requests.put("blogs", blog),
+  addBlog: (blog: any) => requests.post("blogs", blog),
+  delete: (blogId: number) => requests.delete(`blogs/${blogId}`)
+};
+
 
 const Voucher = {
   list: createListEndpoint("vouchers", "voucherId"),
@@ -119,6 +132,7 @@ const agent = {
   Category,
   Address,
   Voucher,
+  Blog
 };
 
 export default agent;

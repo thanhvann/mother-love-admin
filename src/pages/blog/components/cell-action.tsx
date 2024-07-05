@@ -34,8 +34,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   );
   const { toast } = useToast();
   const navigate = useNavigate();
-  const blog = blogSchema.parse(data);
-  console.log("dataaaaaaaaaaaaaaaaaa", blog);
+  // const blog = blogSchema.parse(data);
+  console.log("dataaaaaaaaaaaaaaaaaa", data);
 
   const onConfirm = async () => {
     try {
@@ -58,7 +58,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   };
   const handleEditClick = () => {
     // setDialogContent(<EditDialog category={blog} />);
-    navigate("/admin/newBlog", { state: blog });
+    navigate("/admin/newBlog", { state: data });
   };
 
   return (
@@ -97,7 +97,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     </DialogTrigger> */}
 
             <DropdownMenuItem
-              onClick={() => navigate("/admin/newBlog", { state: blog })}
+              onClick={() => navigate("/admin/newBlog", { state: data })}
             >
               <Icons.edit className="mr-2 h-4 w-4" />
               Edit Details

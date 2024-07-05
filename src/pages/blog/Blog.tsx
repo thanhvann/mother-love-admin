@@ -17,11 +17,33 @@ export const Blog = () => {
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const navigate = useNavigate();
 
+  const formatDate = (timestamp: string): string => {
+    const date = new Date(timestamp);
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+
+    return date.toLocaleString("en-US", options);
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
         const result = await agent.Blog.list(pageNo, pageSize);
-        setData(result.content); // Assuming the data is in the `data` field of the response
+        const formattedData = result.content.map((item: BlogObj) => {
+          return {
+            ...item,
+            createdDate: formatDate(item.createdDate), // Format as desired
+            lastModifiedDate: formatDate(item.lastModifiedDate),
+          };
+        });
+        setData(formattedData); // Assuming the data is in the `data` field of the response
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -32,8 +54,8 @@ export const Blog = () => {
     <>
       <div className="flex items-center justify-between pt-4">
         <Heading
-          title={`Category (${Object.keys(data).length})`}
-          description="Manage Category in the shop"
+          title={`Blog (${Object.keys(data).length})`}
+          description="Manage Blog in the shop"
         />
 
         <Button onClick={() => navigate("/admin/newBlog", { state: null })}>

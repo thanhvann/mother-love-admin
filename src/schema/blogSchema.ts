@@ -5,7 +5,15 @@ export const blogSchema = z.object({
     title:  z.string(),
     content: z.string(),
     createdDate: z.string(),
-    lastModifiedDate: z.string()
+    lastModifiedDate: z.string(),
+    user: z.object({
+        fullName: z.string(),
+    }),
+    product: z.object({
+        productName: z.string(),
+    })
+
+
 });
 
 export type BrandType = z.infer<typeof blogSchema>;

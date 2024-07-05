@@ -24,20 +24,16 @@ import ImageUpload from "@/components/image-upload";
 interface ManageBlogForm {}
 
 const editSchema = z.object({
-  image: z.array(z.string()).optional(),
+  image: z.string().optional(),
   title: z.string().min(1, { message: "Title is required!" }),
   content: z.string().min(1, { message: "Content is required!" }),
   createdDate: z.string(),
   lastModifiedDate: z.string(),
   user: z.object({
-    userId: z.coerce.number().refine((value) => value > 0, {
-      message: "User Required.",
-    }),
+    fullName: z.string().min(1, { message: "Author is required!" }),
   }),
   product: z.object({
-    productId: z.coerce.number().refine((value) => value > 0, {
-      message: "Product Required.",
-    }),
+    productName: z.string().min(1, { message: "Product is required!" }),
   }),
 });
 
@@ -55,13 +51,13 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
     resolver: zodResolver(editSchema),
     defaultValues: initialData || {
       title: "",
-      image: [],
+      image: "",
       content: "",
       user: {
-        userId: 0,
+        fullName: "",
       },
       product: {
-        productId: 0,
+        productName: "",
       },
     },
   });
@@ -72,18 +68,19 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
       setHtmlPreview(initialData.content);
     }
   }, [initialData]);
+  console.log(initialData);
 
   async function onSubmit(values: editSchemaType) {
     try {
-      const image =
-        values.image && values.image.length > 0 ? values.image[0] : undefined;
+      // const image =
+      //   values.image && values.image.length > 0 ? values.image[0] : undefined;
       if (initialData) {
-        await agent.Blog.updateBlog({ ...values, image }); // Assuming updateBlog method exists
+        await agent.Blog.updateBlog({ ...values }); // Assuming updateBlog method exists
         toast({
           title: "Blog updated successfully!",
         });
       } else {
-        await agent.Blog.addBlog({ ...values, image });
+        await agent.Blog.addBlog(values);
         toast({
           title: "Create new Blog successfully!",
         });
@@ -97,20 +94,21 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
       console.error("Error creating/updating blog:", error);
     }
   }
-  const handleImageUpload = (url: string) => {
-    const currentValue = form.getValues("image") || [];
-    if (!currentValue.includes(url)) {
-      form.setValue("image", [...currentValue, url]);
-    }
-  };
+  // const handleImageUpload = (url: string) => {
+  //   const currentValue = form.getValues("image") || [];
+  //   if (!currentValue.includes(url)) {
+  //     form.setValue("image", [...currentValue, url]);
+  //   }
+  // };
 
-  const handleImageRemove = (url: string) => {
-    const currentValue = form.getValues("image") || [];
-    form.setValue(
-      "image",
-      currentValue.filter((v) => v !== url)
-    );
-  };
+  // const handleImageRemove = (url: string) => {
+  //   const currentValue = form.getValues("image") || [];
+  //   form.setValue(
+  //     "image",
+  //     currentValue.filter((v) => v !== url)
+  //   );
+  // };
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mt-2">
@@ -124,37 +122,7 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
             <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Title" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="image"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Thumbnail Image</FormLabel>
-                      <FormControl>
-                        <ImageUpload
-                          value={field.value || []}
-                          onChange={handleImageUpload}
-                          onRemove={handleImageRemove}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="h-full row-span-2">
                 <FormField
                   control={form.control}
                   name="content"
@@ -178,43 +146,107 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
                 />
               </div>
               <div>
-                <h2 className="text-lg font-semibold mb-2">HTML Preview</h2>
-                <div
-                  className="border rounded p-4"
-                  dangerouslySetInnerHTML={{ __html: htmlPreview }}
-                />
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Title" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Thumbnail Image</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value ? [field.value] : []}
+                            onChange={(url) => field.onChange(url)}
+                            onRemove={() => field.onChange("")}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="createdDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Created Date</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Created Date"
+                            {...field}
+                            readOnly
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lastModifiedDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Modified Date</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Last Modified Date"
+                            {...field}
+                            readOnly
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="user.fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Author</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Author" {...field} readOnly />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="product.productName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Product</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Product" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <h2 className="text-lg font-semibold mb-2">HTML Preview</h2>
+                  <div
+                    className="border rounded p-4"
+                    dangerouslySetInnerHTML={{ __html: htmlPreview }}
+                  />
+                </div>
               </div>
             </div>
-            <FormField
-              control={form.control}
-              name="createdDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Created Date</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Created Date" {...field} readOnly />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastModifiedDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Modified Date</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Last Modified Date"
-                      {...field}
-                      readOnly
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <Button type="submit" className="ml-auto col-span-2">
               {initialData ? "Update" : "Create"}
             </Button>

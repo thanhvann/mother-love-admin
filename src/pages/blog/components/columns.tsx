@@ -15,7 +15,7 @@ export type BlogColumn = {
   content: string;
   image: string;
   user: User;
-  product: ProductsObj;
+  product: ProductsObj[];
   createdDate: string;
   lastModifiedDate: string;
 };
@@ -112,8 +112,12 @@ export const columns: ColumnDef<BlogColumn>[] = [
     header: "Staff",
   },
   {
-    accessorKey: "product.productId",
+    accessorKey: "product",
     header: "Product",
+    cell: ({ row }) => {
+      const products = row.original.product;
+      return products.map((p) => p.productName).join(", ");
+    },
   },
   {
     accessorKey: "createdDate",

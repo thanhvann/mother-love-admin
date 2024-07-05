@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -23,18 +23,28 @@ import ImageUpload from "@/components/image-upload";
 
 interface ManageBlogForm {}
 
+interface User {
+  userId: number;
+  fullName: string;
+}
+interface Product {
+  productId: number;
+  productName: string;
+}
 const editSchema = z.object({
   image: z.string().optional(),
   title: z.string().min(1, { message: "Title is required!" }),
-  content: z.string().min(1, { message: "Content is required!" }),
-  createdDate: z.string(),
-  lastModifiedDate: z.string(),
+  content: z.string().nullable(),
   user: z.object({
     fullName: z.string().min(1, { message: "Author is required!" }),
   }),
-  product: z.object({
-    productName: z.string().min(1, { message: "Product is required!" }),
-  }),
+  product: z
+    .array(
+      z.object({
+        productName: z.string().min(1, { message: "Product is required!" }),
+      })
+    )
+    .nonempty({ message: "At least one product is required" }),
 });
 
 type editSchemaType = z.infer<typeof editSchema>;
@@ -44,8 +54,28 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const initialData = location.state || null;
-
+  const [openProductComboBox, setOpenProductComboBox] = useState(false);
+  const [openUserComboBox, setOpenUserComboBox] = useState(false);
+  const [user, setUser] = useState<User[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [htmlPreview, setHtmlPreview] = useState<string>("");
+  const [pageNo, setPageNo] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        await agent.Products.list(pageNo, pageSize).then((response) => {
+          if (response.content && Array.isArray(response.content)) {
+            setProducts(response.content);
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    getProducts();
+  }, []);
 
   const form = useForm<editSchemaType>({
     resolver: zodResolver(editSchema),
@@ -56,10 +86,17 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
       user: {
         fullName: "",
       },
-      product: {
-        productName: "",
-      },
+      product: [
+        {
+          productName: "",
+        },
+      ],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "product",
   });
 
   useEffect(() => {
@@ -68,12 +105,11 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
       setHtmlPreview(initialData.content);
     }
   }, [initialData]);
-  console.log(initialData);
 
   async function onSubmit(values: editSchemaType) {
     try {
-      // const image =
-      //   values.image && values.image.length > 0 ? values.image[0] : undefined;
+      console.log("submit", values);
+
       if (initialData) {
         await agent.Blog.updateBlog({ ...values }); // Assuming updateBlog method exists
         toast({
@@ -178,7 +214,7 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
                     )}
                   />
 
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="createdDate"
                     render={({ field }) => (
@@ -211,7 +247,7 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                   <FormField
                     control={form.control}
                     name="user.fullName"
@@ -225,20 +261,42 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="product.productName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Product" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
+                  {fields.map((item, index) => (
+                    <div key={item.id} className="mt-2">
+                      <FormField
+                        control={form.control}
+                        name={`product.${index}.productName`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Product {index + 1}</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Product" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        variant="destructive"
+                        type="button"
+                        onClick={() => remove(index)}
+                      >
+                        Remove Product
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() =>
+                      append({
+                        productName: "",
+                      })
+                    }
+                    className="mt-2"
+                  >
+                    Add Product
+                  </Button>
                   <h2 className="text-lg font-semibold mb-2">HTML Preview</h2>
                   <div
                     className="border rounded p-4"

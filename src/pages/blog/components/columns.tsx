@@ -5,29 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Icons } from "@/components/ui/icons";
-import { statuses } from "@/components/DataTable/filters";
 import { CellAction } from "./cell-action";
-import { ProductType } from "@/schema/productSchema";
+import { User } from "@/models/User";
+import { ProductsObj } from "@/models/Product";
 
-export type ProductColumn = {
-  productId: number;
-  productName: string;
-  description: string;
-  price: number;
-  status: number;
+export type BlogColumn = {
+  blogId: number;
+  title: string;
+  content: string;
   image: string;
-  category: {
-    categoryId: number;
-    categoryName: string;
-  };
-  brand: {
-    brandId: number;
-    brandName: string;
-    image: string;
-  };
+  user: User;
+  product: ProductsObj;
+  createdDate: string;
+  lastModifiedDate: string;
 };
 
-export const columns: ColumnDef<ProductColumn>[] = [
+export const columns: ColumnDef<BlogColumn>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -50,85 +43,87 @@ export const columns: ColumnDef<ProductColumn>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "blogId",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Blog ID
+          <Icons.sort className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+
+  {
+    accessorKey: "title",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Title
+          <Icons.sort className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "content",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Content
+          <Icons.sort className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "image",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Image
+        </Button>
+      );
+    },
     cell: ({ row }) => {
-      const status = statuses.find(
-        (status) => status.value === row.getValue("status")
+      return (
+        <img
+          src={row.original.image}
+          alt={row.original.title}
+          style={{ width: "50px", height: "auto" }}
+        />
       );
+    },
+  },
+  {
+    accessorKey: "user.fullName",
+    header: "Staff",
+  },
+  {
+    accessorKey: "product.productId",
+    header: "Product",
+  },
+  {
+    accessorKey: "createdDate",
+    header: "Created Date",
+  },
+  {
+    accessorKey: "lastModifiedDate",
+    header: "Last Modified Date",
+  },
 
-      if (!status) {
-        return null;
-      }
-
-      return (
-        <div className="flex w-[100px] items-center">
-          {status.icon && (
-            <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
-          <span>{status.label}</span>
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-  },
-  {
-    accessorKey: "productId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Product ID
-          <Icons.sort className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "productName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Product Name
-          <Icons.sort className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-  },
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="-ml-4"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <Icons.sort className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "category.categoryName",
-    header: "Category",
-  },
-  {
-    accessorKey: "brand.brandName",
-    header: "Brand",
-  },
   {
     id: "actions",
     header: () => <div>Actions</div>,

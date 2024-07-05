@@ -1,6 +1,5 @@
 import { z } from "zod";
 export const categorySchema = z.object({
-  
     categoryId: z.number(),
     categoryName: z.string(),
   

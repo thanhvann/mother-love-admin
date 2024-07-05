@@ -2,6 +2,7 @@ import {
   IconApps,
   IconBarrierBlock,
   IconBoxSeam,
+  IconBrandBlogger,
   IconBrandProducthunt,
   IconCategory,
   IconChartHistogram,
@@ -74,10 +75,17 @@ export const sidelinks: SideLink[] = [
     icon: <IconMilk size={18} />,
   },
   {
+
     title: "Vouchers",
     label: "",
     href: "/admin/vouchers",
     icon: <IconTicket size={18} />,
+
+    title: "Blog",
+    label: "",
+    href: "/admin/blog",
+    icon: <IconBrandBlogger size={18} />,
+
   },
   // {
   //   title: "Authentication",

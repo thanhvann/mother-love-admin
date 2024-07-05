@@ -90,6 +90,9 @@ const Category = {
 
 const Voucher = {
   list: createListEndpoint("vouchers", "voucherId"),
+  manageVouchers: (pageNo: number, pageSize: number, sortBy: string = "voucherId", sortDir: string = "asc") => {
+    return requests.get(`vouchers/manage?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  },
   getMemberVouchers: (userId: number) => requests.get(`vouchers/member?userId=${userId}`),
   addVoucherForMember: (userId: number, voucherId: number) => requests.post(`vouchers/member?userId=${userId}&voucherId=${voucherId}`, {}),
   addVoucher: (voucher: any) => requests.post("vouchers", voucher),

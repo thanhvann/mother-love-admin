@@ -50,15 +50,6 @@ export const columns: ColumnDef<VoucherObj>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <div>
-        {row.original.status ? (
-          <span className="text-green-600">Active</span>
-        ) : (
-          <span className="text-red-600">Inactive</span>
-        )}
-      </div>
-    ),
   },
   {
     id: "actions",

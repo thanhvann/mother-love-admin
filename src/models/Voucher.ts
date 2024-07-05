@@ -7,6 +7,6 @@ export interface VoucherObj {
     minOrderAmount: number;
     startDate: string;
     endDate: string;
-    status: boolean;
+    status: string;
     quantityUse: number;
 }

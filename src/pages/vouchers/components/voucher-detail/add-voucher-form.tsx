@@ -28,18 +28,9 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import agent from "@/api/agent";
 import { Layout } from "@/components/custom/layout";
+import { voucherSchema } from "@/schema/voucherSchema";
 
-const voucherSchema = z.object({
-  voucherCode: z.string().min(1, { message: "Voucher Code Required" }),
-  voucherName: z.string().min(1, { message: "Voucher Name Required" }),
-  quantity: z.coerce.number().min(1, { message: "Quantity must be at least 1" }),
-  quantityUse: z.coerce.number().min(1, { message: "Quantity Use must be at least 1" }),
-  discount: z.coerce.number().min(0, { message: "Discount must be positive" }),
-  minOrderAmount: z.coerce.number().min(0, { message: "Min Order Amount must be positive" }),
-  startDate: z.string().min(1, { message: "Start Date Required" }),
-  endDate: z.string().min(1, { message: "End Date Required" }),
-  status: z.boolean(),
-});
+
 
 type VoucherSchemaType = z.infer<typeof voucherSchema>;
 
@@ -57,7 +48,7 @@ const AddVoucher: React.FC = () => {
       minOrderAmount: 0,
       startDate: "0000-00-00",
       endDate: "0000-00-00",
-      status: true,
+      status: "ACTIVE",
     },
   });
 
@@ -79,6 +70,7 @@ const AddVoucher: React.FC = () => {
       console.error("Error adding voucher:", error);
     }
   };
+
   const handleCancel = () => {
     navigate("/admin/vouchers");
   };
@@ -198,16 +190,37 @@ const AddVoucher: React.FC = () => {
                     </FormItem>
                   )}
                 />
-               
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem value="ACTIVE">Active</SelectItem>
+                              <SelectItem value="INACTIVE">Inactive</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className=" space-x-2">
-              <Button type="submit">
+              <div className="space-x-2">
+                <Button type="submit">
                   Add Voucher
                 </Button>
                 <Button type="button" variant="outline" onClick={handleCancel}>
                   Cancel
                 </Button>
-              
               </div>
             </form>
           </Form>

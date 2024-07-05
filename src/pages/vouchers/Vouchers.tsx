@@ -26,7 +26,7 @@ const Vouchers = () => {
 
   const fetchData = async () => {
     try {
-      const result = await agent.Voucher.list(pageNo, pageSize);
+      const result = await agent.Voucher.manageVouchers(pageNo, pageSize);
       setData(result.content);
     } catch (error) {
       console.error("Error fetching data:", error);

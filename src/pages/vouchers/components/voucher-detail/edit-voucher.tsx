@@ -10,7 +10,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input, InputProps } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import agent from "@/api/agent";
@@ -20,12 +28,16 @@ import { voucherSchema } from "@/schema/voucherSchema";
 interface EditVoucherDialogProps {
   voucher: VoucherObj;
   onClose: () => void;
-  onEditSuccess: () => void; 
+  onEditSuccess: () => void;
 }
 
 type VoucherSchemaType = z.infer<typeof voucherSchema>;
 
-const EditVoucherDialog: React.FC<EditVoucherDialogProps> = ({ voucher, onClose, onEditSuccess }) => {
+const EditVoucherDialog: React.FC<EditVoucherDialogProps> = ({
+  voucher,
+  onClose,
+  onEditSuccess,
+}) => {
   const { toast } = useToast();
   const form = useForm<VoucherSchemaType>({
     resolver: zodResolver(voucherSchema),
@@ -37,16 +49,20 @@ const EditVoucherDialog: React.FC<EditVoucherDialogProps> = ({ voucher, onClose,
       quantityUse: voucher.quantityUse,
       discount: voucher.discount,
       minOrderAmount: voucher.minOrderAmount,
-      startDate: voucher.startDate.substring(0, 10), // Extract yyyy-mm-dd from full ISO string
-      endDate: voucher.endDate.substring(0, 10), // Extract yyyy-mm-dd from full ISO string
-      status: voucher.status,
+      startDate: voucher.startDate.substring(0, 10),
+      endDate: voucher.endDate.substring(0, 10),
+      status: voucher.status ? "ACTIVE" : "INACTIVE",
     },
   });
 
   const onSubmit = async (values: VoucherSchemaType) => {
     const startDateTime = `${values.startDate}T00:00:00.000Z`;
     const endDateTime = `${values.endDate}T23:59:59.999Z`;
-    const updatedValues = { ...values, startDate: startDateTime, endDate: endDateTime };
+    const updatedValues = {
+      ...values,
+      startDate: startDateTime,
+      endDate: endDateTime,
+    };
 
     try {
       await agent.Voucher.updateVoucher(updatedValues);
@@ -65,10 +81,10 @@ const EditVoucherDialog: React.FC<EditVoucherDialogProps> = ({ voucher, onClose,
   };
 
   return (
-    <div className="p-4">
+    <div >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          {/* Form fields */}
+        
           <FormField
             control={form.control}
             name="voucherCode"
@@ -180,11 +196,17 @@ const EditVoucherDialog: React.FC<EditVoucherDialogProps> = ({ voucher, onClose,
               <FormItem>
                 <FormLabel>Status</FormLabel>
                 <FormControl>
-                  <Input
-                    type="checkbox"
-                    defaultChecked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                  />
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="ACTIVE">Active</SelectItem>
+                        <SelectItem value="INACTIVE">Inactive</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -5,11 +5,11 @@ import { toast } from "react-toastify";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
-axios.defaults.baseURL = "https://mother-love-be.onrender.com/api/v1/";
+axios.defaults.baseURL = "https://motherlove-api.onrender.com/api/v1/";
 axios.defaults.withCredentials = true;
 
 const axiosInstance = axios.create({
-  baseURL: "https://mother-love-be.onrender.com/api/v1/", // Replace with your actual API base URL
+  baseURL: "https://motherlove-api.onrender.com/api/v1/", // Replace with your actual API base URL
   headers: {
     "Content-Type": "application/json",
   },
@@ -123,7 +123,7 @@ const Address = {
   updateAddress: (addressId: number, updatedAddress: any) => {
     return requests.put(`address`, updatedAddress);
   },
-  addNewAddress: (newAddress: any) => requests.post(`http://localhost:8080/api/v1/address`, newAddress),
+  addNewAddress: (newAddress: any) => requests.post(`http://motherlove-api.onrender.com/api/v1/address`, newAddress),
 };
 
 const agent = {

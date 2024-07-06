@@ -11,6 +11,8 @@ import { Brand } from "@/pages/brand/Brand";
 import { AddBrand } from "@/pages/brand/brand-detail/add-brand-form";
 import { Blog } from "@/pages/blog/Blog";
 import { AddBlog } from "@/pages/blog/blog-detail/add-blog-form";
+import Vouchers from "@/pages/vouchers/Vouchers";
+import AddVoucher from "@/pages/vouchers/components/voucher-detail/add-voucher-form";
 
 const PrivateRoute = ({ element, ...rest }: any) => {
   const { isLoggedIn } = useAuth();
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
       {
         path: "/admin/newCategory",
         element: <AddCategory />,
+      },
+      {
+        path: "/admin/vouchers",
+        element: <Vouchers />,
+      },
+      {
+        path: "/admin/vouchers/new",
+        element: <AddVoucher />,
       },
       {
         path: "/admin/brand",

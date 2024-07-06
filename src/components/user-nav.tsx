@@ -13,10 +13,12 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { User } from "@/models/User";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export function UserNav() {
   const { isLoggedIn, logout, getUserInfo } = useAuth();
   const [userInfo, setUserInfo] = useState<User>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -34,6 +36,12 @@ export function UserNav() {
       fetchUserInfo();
     }
   }, [isLoggedIn, getUserInfo]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -73,7 +81,7 @@ export function UserNav() {
           <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

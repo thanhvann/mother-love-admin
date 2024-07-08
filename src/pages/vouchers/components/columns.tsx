@@ -2,9 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Icons } from "@/components/ui/icons";
-import { statuses } from "@/components/DataTable/filters";
+
 
 import { VoucherObj } from "@/models/Voucher";
 import CellAction from "./cell-action";

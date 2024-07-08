@@ -1,6 +1,6 @@
 // vouchers.tsx
 
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -13,16 +13,16 @@ import { columns } from "./components/columns";
 
 const Vouchers = () => {
   const [data, setData] = useState<VoucherObj[]>([]);
-  const [pageNo, setPageNo] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState("voucherId");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [shouldRefresh, setShouldRefresh] = useState<boolean>(false); // State to force DataTable refresh
+  const [pageNo, ] = useState(0);
+  const [pageSize, ] = useState(10);
+  const [sortBy, ] = useState("voucherId");
+  const [sortDir, ] = useState<"asc" | "desc">("asc");
+  const [shouldRefresh, ] = useState<boolean>(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
-  }, [pageNo, pageSize, sortBy, sortDir, shouldRefresh]); // Add shouldRefresh to dependencies
+  }, [pageNo, pageSize, sortBy, sortDir, shouldRefresh]); 
 
   const fetchData = async () => {
     try {

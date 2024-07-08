@@ -24,6 +24,7 @@ import {
   IconUserShield,
   IconUsers,
   IconTicket,
+  IconMenuOrder,
 } from "@tabler/icons-react";
 import { Milk } from "lucide-react";
 
@@ -79,6 +80,12 @@ export const sidelinks: SideLink[] = [
     label: "",
     href: "/admin/vouchers",
     icon: <IconTicket size={18} />,
+  },
+  {
+    title: "Orders",
+    label: "",
+    href: "/admin/orders",
+    icon: <IconMenuOrder size={18} />,
   },
   {
     title: "Blog",

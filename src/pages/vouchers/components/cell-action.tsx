@@ -17,7 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modal/alert-modal";
 import agent from "@/api/agent";
 import { VoucherObj } from "@/models/Voucher";
-import EditVoucherDialog from "./voucher-detail/edit-voucher";
+import EditVoucherDialog from "../voucher-detail/edit-voucher";
 
 interface CellActionProps {
   data: VoucherObj;

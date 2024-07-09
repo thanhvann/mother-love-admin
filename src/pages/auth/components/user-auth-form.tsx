@@ -62,6 +62,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         ) {
           // User has permission, navigate to admin page
           navigate("/admin");
+          console.log( userInfo.roleName);
         } else {
           // User does not have permission
           setError("You don't have permission.");

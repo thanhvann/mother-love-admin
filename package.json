@@ -37,6 +37,7 @@
     "cloudinary-react": "^1.8.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
     "install": "^0.13.0",
     "jwt-decode": "^4.0.0",
     "latest": "^0.2.0",

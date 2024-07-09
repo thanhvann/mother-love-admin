@@ -110,13 +110,7 @@ export const AddProduct: React.FC<ManageProductForm> = () => {
 
   return (
     <Layout>
-      {/* ===== Top Heading ===== */}
-      <Layout.Header sticky>
-        <div className="ml-auto flex items-center space-x-4">
-          <ThemeSwitch />
-          <UserNav />
-        </div>
-      </Layout.Header>
+   
 
       <Layout.Body>
         <div className="mt-2">

@@ -11,6 +11,11 @@ import { Brand } from "@/pages/brand/Brand";
 import { AddBrand } from "@/pages/brand/brand-detail/add-brand-form";
 import { Blog } from "@/pages/blog/Blog";
 import { AddBlog } from "@/pages/blog/blog-detail/add-blog-form";
+import Vouchers from "@/pages/vouchers/Vouchers";
+import AddVoucher from "@/pages/vouchers/voucher-detail/add-voucher-form";
+import Orders from "@/pages/order/Orders";
+import OrderDetail from "@/pages/order/OrderDetail";
+
 
 const PrivateRoute = ({ element, ...rest }: any) => {
   const { isLoggedIn } = useAuth();
@@ -52,6 +57,22 @@ const router = createBrowserRouter([
         element: <AddCategory />,
       },
       {
+        path: "/admin/vouchers",
+        element: <Vouchers />,
+      },
+      {
+        path: "/admin/orders",
+        element: <Orders />,
+      },
+      {
+        path: "/admin/orders/:orderId",
+        element: <OrderDetail />,
+      },
+      {
+        path: "/admin/vouchers/new",
+        element: <AddVoucher />,
+      },
+      {
         path: "/admin/brand",
         element: <Brand />,
       },
@@ -72,3 +93,6 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+
+
+

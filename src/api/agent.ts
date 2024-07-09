@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
 
-// axios.defaults.baseURL = "https://motherlove-api.onrender.com/api/v1/";
-axios.defaults.baseURL = "https://localhost:8080/api/v1/";
+// const BASE_URL = "https://motherlove-api.onrender.com/api/v1/";
+const BASE_URL = "http://localhost:8080/api/v1/";
+
+axios.defaults.baseURL = BASE_URL;
 axios.defaults.withCredentials = true;
 
 const axiosInstance = axios.create({
-  baseURL: axios.defaults.baseURL, // Replace with your actual API base URL
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -26,9 +26,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
@@ -36,8 +34,8 @@ axiosInstance.interceptors.response.use(
     await sleep();
     return response;
   },
-  (error: AxiosError) => {
-    const { data, status } = error.response as AxiosResponse;
+  (error) => {
+    const { data, status } = error.response;
     switch (status) {
       case 400:
         if (data.errors) {
@@ -52,13 +50,8 @@ axiosInstance.interceptors.response.use(
         toast.error(data.title);
         break;
       case 401:
-        toast.error(data.title);
-        break;
       case 404:
-        toast.error(data.title);
-        break;
       case 500:
-        // router.navigate("/server-error", { state: { error: data } });
         toast.error(data.title);
         break;
       default:
@@ -84,34 +77,40 @@ const Products = {
   list: createListEndpoint("product", "productId"),
   addMilk: (product: any) => requests.post("product", product),
   updateMilk: (product: any) => requests.put("product/update", product),
-  delete: (productId: number) => requests.delete(`product/delete/${productId}`)
+  delete: (productId: number) => requests.delete(`product/delete/${productId}`),
 };
 
 const Brand = {
   list: createListEndpoint("brand", "brandId"),
   updateBrand: (brand: any) => requests.put("brand/update", brand),
-  addBrand: (brand: any) => requests.post("brand",brand),
-  delete: (brandId: number) => requests.delete(`brand/delete/${brandId}`)
-  };
+  addBrand: (brand: any) => requests.post("brand", brand),
+  delete: (brandId: number) => requests.delete(`brand/delete/${brandId}`),
+};
 
 const Category = {
   list: createListEndpoint("categories", "categoryId"),
   updateCategory: (category: any) => requests.put("categories", category),
   addCategory: (category: any) => requests.post("categories", category),
-  delete: (categoryId: number) => requests.delete(`categories/${categoryId}`)
+  delete: (categoryId: number) => requests.delete(`categories/${categoryId}`),
 };
+
 const Blog = {
   list: createListEndpoint("blogs", "blogId"),
   updateBlog: (blog: any) => requests.put("blogs", blog),
   addBlog: (blog: any) => requests.post("blogs", blog),
-  delete: (blogId: number) => requests.delete(`blogs/${blogId}`)
+  delete: (blogId: number) => requests.delete(`blogs/${blogId}`),
 };
-
 
 const Voucher = {
   list: createListEndpoint("vouchers", "voucherId"),
+  manageVouchers: (pageNo: number, pageSize: number, sortBy: string = "voucherId", sortDir: string = "asc") => {
+    return requests.get(`vouchers/manage?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  },
   getMemberVouchers: (userId: number) => requests.get(`vouchers/member?userId=${userId}`),
   addVoucherForMember: (userId: number, voucherId: number) => requests.post(`vouchers/member?userId=${userId}&voucherId=${voucherId}`, {}),
+  addVoucher: (voucher: any) => requests.post("vouchers", voucher),
+  updateVoucher: (voucher: any) => requests.put("vouchers", voucher),
+  deleteVoucher: (voucherId: number) => requests.delete(`vouchers/${voucherId}`),
 };
 
 const Address = {
@@ -126,6 +125,17 @@ const Address = {
   },
   // addNewAddress: (newAddress: any) => requests.post(`http://motherlove-api.onrender.com/api/v1/address`, newAddress),
   addNewAddress: (newAddress: any) => requests.post(`http://localhost:8080/api/v1/address`, newAddress),
+  addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
+};
+
+const Orders = {
+  getOrders: (pageNo: number, pageSize: number, sortBy: string = "orderId", sortDir: string = "asc") => {
+    return requests.get(`orders?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  },
+  getOrderById: async (orderId: number) => requests.get(`orders/order/${orderId}`),
+  searchOrders: (pageNo: number, pageSize: number, sortBy: string = "orderId", sortDir: string = "asc", orderDateFrom: string, orderDateTo: string) => {
+    return requests.get(`orders/search?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&orderDateFrom=${orderDateFrom}&orderDateTo=${orderDateTo}`);
+  },
 };
 
 const User = {
@@ -139,6 +149,7 @@ const agent = {
   Address,
   Voucher,
   Blog,
+  Orders,
   User
 };
 

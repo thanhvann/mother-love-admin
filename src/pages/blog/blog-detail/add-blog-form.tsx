@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -20,30 +20,28 @@ import { useToast } from "@/components/ui/use-toast";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ImageUpload from "@/components/image-upload";
+import { useAuth } from "@/context/AuthContext";
+import ProductPopover from "./product-popover";
+import { User } from "@/models/User";
 
 interface ManageBlogForm {}
 
-interface User {
-  userId: number;
-  fullName: string;
-}
+// interface User {
+//   userId: number;
+//   fullName: string;
+// }
 interface Product {
   productId: number;
   productName: string;
 }
 const editSchema = z.object({
+  blogId: z.coerce.number(),
   image: z.string().optional(),
   title: z.string().min(1, { message: "Title is required!" }),
   content: z.string().nullable(),
-  user: z.object({
-    fullName: z.string().min(1, { message: "Author is required!" }),
-  }),
-  product: z
-    .array(
-      z.object({
-        productName: z.string().min(1, { message: "Product is required!" }),
-      })
-    )
+  // userId: z.number(),
+  productId: z
+    .array(z.number())
     .nonempty({ message: "At least one product is required" }),
 });
 
@@ -54,69 +52,68 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const initialData = location.state || null;
-  const [openProductComboBox, setOpenProductComboBox] = useState(false);
-  const [openUserComboBox, setOpenUserComboBox] = useState(false);
-  const [user, setUser] = useState<User[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [user, setUser] = useState<User>();
   const [htmlPreview, setHtmlPreview] = useState<string>("");
-  const [pageNo, setPageNo] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const { isLoggedIn, getUserInfo } = useAuth();
 
   useEffect(() => {
-    const getProducts = async () => {
+    const fetchUserInfo = async () => {
       try {
-        await agent.Products.list(pageNo, pageSize).then((response) => {
-          if (response.content && Array.isArray(response.content)) {
-            setProducts(response.content);
-          }
-        });
+        const userInfo = await getUserInfo();
+        if (userInfo) {
+          setUser(userInfo);
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Failed to fetch user info:", error);
       }
     };
-    getProducts();
-  }, []);
+
+    if (isLoggedIn) {
+      fetchUserInfo();
+    }
+  }, [isLoggedIn, getUserInfo]);
 
   const form = useForm<editSchemaType>({
     resolver: zodResolver(editSchema),
     defaultValues: initialData || {
+      blogId: 0,
       title: "",
       image: "",
       content: "",
-      user: {
-        fullName: "",
-      },
-      product: [
-        {
-          productName: "",
-        },
-      ],
+
+      // userId: 0,
+
+      productId: [],
     },
   });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "product",
-  });
-
   useEffect(() => {
     if (initialData) {
+      // Initialize selectedProducts and productIds from initialData
+      const initialProducts = initialData.product || [];
+      setSelectedProducts(initialProducts);
+      const initialProductIds = initialProducts.map(
+        (product: any) => product.productId
+      );
+      form.setValue("productId", initialProductIds);
+
       // If editing existing blog, set initial values for preview
       setHtmlPreview(initialData.content);
     }
-  }, [initialData]);
+  }, [initialData, form]);
 
   async function onSubmit(values: editSchemaType) {
     try {
-      console.log("submit", values);
-
+      const productId = selectedProducts.map((product) => product.productId);
+      const userId = initialData ? initialData.user.userId : user?.userId;
       if (initialData) {
-        await agent.Blog.updateBlog({ ...values }); // Assuming updateBlog method exists
+        await agent.Blog.updateBlog({ ...values, productId, userId }); // Assuming updateBlog method exists
         toast({
           title: "Blog updated successfully!",
         });
       } else {
-        await agent.Blog.addBlog(values);
+        const userId = user?.userId;
+        await agent.Blog.addBlog({ ...values, userId });
         toast({
           title: "Create new Blog successfully!",
         });
@@ -130,20 +127,24 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
       console.error("Error creating/updating blog:", error);
     }
   }
-  // const handleImageUpload = (url: string) => {
-  //   const currentValue = form.getValues("image") || [];
-  //   if (!currentValue.includes(url)) {
-  //     form.setValue("image", [...currentValue, url]);
-  //   }
-  // };
 
-  // const handleImageRemove = (url: string) => {
-  //   const currentValue = form.getValues("image") || [];
-  //   form.setValue(
-  //     "image",
-  //     currentValue.filter((v) => v !== url)
-  //   );
-  // };
+  const handleProductSelect = (product: Product | null) => {
+    if (product) {
+      const exists = selectedProducts.some(
+        (p) => p.productId === product.productId
+      );
+      if (!exists) {
+        setSelectedProducts([...selectedProducts, product]);
+        form.setValue("productId", [
+          ...form.getValues("productId"),
+          product.productId,
+        ]);
+      }
+    } else {
+      setSelectedProducts([]);
+      form.setValue("productId", [0]);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -168,10 +169,10 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
                       <FormControl>
                         <CKEditor
                           editor={ClassicEditor}
-                          data={field.value}
+                          data={field.value} // Bind CKEditor data to field.value
                           onChange={(_, editor) => {
                             const data = editor.getData();
-                            field.onChange(data);
+                            field.onChange(data); // Update form field with CKEditor data
                             setHtmlPreview(data); // Update HTML preview state
                           }}
                         />
@@ -183,125 +184,93 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
               </div>
               <div>
                 <div>
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Title</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Title" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Thumbnail Image</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value ? [field.value] : []}
-                            onChange={(url) => field.onChange(url)}
-                            onRemove={() => field.onChange("")}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="blogId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Blog ID</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Blog ID" {...field} readOnly />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Title</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Title"
+                              value={field.value}
+                              onChange={(e) => field.onChange(e.target.value)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="image"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Thumbnail Image</FormLabel>
+                          <FormControl>
+                            <ImageUpload
+                              value={field.value ? [field.value] : []}
+                              onChange={(url) => field.onChange(url)}
+                              onRemove={() => field.onChange("")}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* <FormField
+                      name="userId" // No need to bind control here
+                      render={() => (
+                        <FormItem>
+                          <FormLabel>Author</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Author"
+                              value={user?.fullName || ""}
+                              readOnly
+                            />
+                          </FormControl>
+                          {/* No FormMessage needed here because it's not controlled by form.control */}
+                    {/* </FormItem>
+                      )}
+                    /> */}
+                    <FormField
+                      control={form.control}
+                      name="productId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Product</FormLabel>
+                          <FormControl>
+                            <ProductPopover
+                              onSelect={handleProductSelect}
+                              selectedProducts={selectedProducts}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* <FormField
-                    control={form.control}
-                    name="createdDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Created Date</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Created Date"
-                            {...field}
-                            readOnly
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="lastModifiedDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Modified Date</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Last Modified Date"
-                            {...field}
-                            readOnly
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  /> */}
-                  <FormField
-                    control={form.control}
-                    name="user.fullName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Author</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Author" {...field} readOnly />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {fields.map((item, index) => (
-                    <div key={item.id} className="mt-2">
-                      <FormField
-                        control={form.control}
-                        name={`product.${index}.productName`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Product {index + 1}</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Product" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button
-                        variant="destructive"
-                        type="button"
-                        onClick={() => remove(index)}
-                      >
-                        Remove Product
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    variant="outline"
-                    type="button"
-                    onClick={() =>
-                      append({
-                        productName: "",
-                      })
-                    }
-                    className="mt-2"
-                  >
-                    Add Product
-                  </Button>
-                  <h2 className="text-lg font-semibold mb-2">HTML Preview</h2>
-                  <div
-                    className="border rounded p-4"
-                    dangerouslySetInnerHTML={{ __html: htmlPreview }}
-                  />
+                    <h2 className="text-lg font-semibold mb-2">HTML Preview</h2>
+                    <div
+                      className="border rounded p-4"
+                      dangerouslySetInnerHTML={{ __html: htmlPreview }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -19,7 +19,8 @@ export const refreshTokenIfNeeded = async (): Promise<boolean> => {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken || isAccessTokenExpired(accessToken)) {
         try {
-            const response = await axios.post('https://motherlove-api.onrender.com/api/v1/auth/refresh_token', {
+            const response = await axios.post('http://localhost:8080/api/v1/auth/refresh_token', {
+            // const response = await axios.post('https://motherlove-api.onrender.com/api/v1/auth/refresh_token', {
                 refresh_token: localStorage.getItem('refreshToken')
             });
             const newAccessToken = response.data.access_token;
@@ -36,7 +37,8 @@ export const refreshTokenIfNeeded = async (): Promise<boolean> => {
 
 export const login = async (username: string, password: string): Promise<boolean> => {
     try {
-        const response = await axios.post('https://motherlove-api.onrender.com/api/v1/auth/user/login', {
+        const response = await axios.post('http://localhost:8080/api/v1/auth/user/login', {
+        // const response = await axios.post('https://motherlove-api.onrender.com/api/v1/auth/user/login', {
             userNameOrEmailOrPhone: username,
             password: password
         });
@@ -57,7 +59,8 @@ export const getUserInfo = async (): Promise<User | null> => {
         if (!accessToken || isAccessTokenExpired(accessToken)) {
             throw new Error('Access token is missing or expired');
         }
-        const response = await axios.get('https://motherlove-api.onrender.com/api/v1/auth/user/info', {
+        const response = await axios.get('http://localhost:8080/api/v1/auth/user/info', {
+        // const response = await axios.get('https://motherlove-api.onrender.com/api/v1/auth/user/info', {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }

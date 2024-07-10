@@ -2,20 +2,18 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 
 import { Icons } from "@/components/ui/icons";
-import { statuses } from "@/components/DataTable/filters";
+import { Milkstatuses } from "@/components/DataTable/filters";
 import { CellAction } from "./cell-action";
-import { ProductType } from "@/schema/productSchema";
 
 export type ProductColumn = {
   productId: number;
   productName: string;
   description: string;
   price: number;
-  status: number;
-  image: string;
+  status: string;
+  image: string[];
   category: {
     categoryId: number;
     categoryName: string;
@@ -29,31 +27,33 @@ export type ProductColumn = {
 
 export const columns: ColumnDef<ProductColumn>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value: any) =>
-          table.toggleAllPageRowsSelected(!!value)
-        }
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value: any) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    accessorKey: "image",
+    header: "Images",
+    cell: ({ row }) => {
+      const images = Array.isArray(row.original.image)
+        ? row.original.image
+        : [];
+      // console.log("Image", row.original.image);
+
+      return (
+        <div className="flex flex-wrap gap-2">
+          {images.map((url, index) => (
+            <img
+              key={index}
+              src={url}
+              alt={`Product Image ${index}`}
+              className="w-10 h-10 object-cover"
+            />
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = statuses.find(
+      const status = Milkstatuses.find(
         (status) => status.value === row.getValue("status")
       );
 

@@ -125,7 +125,7 @@ const Address = {
   },
   // addNewAddress: (newAddress: any) => requests.post(`http://motherlove-api.onrender.com/api/v1/address`, newAddress),
   addNewAddress: (newAddress: any) => requests.post(`http://localhost:8080/api/v1/address`, newAddress),
-  addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
+  // addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
 };
 
 const Orders = {

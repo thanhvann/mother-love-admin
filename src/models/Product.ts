@@ -6,8 +6,8 @@ export interface ProductsObj {
       productName:string,
       description: string,
       price: number,
-      status: number,
-      image: string,
+      status: string,
+      image: string[],
       category: CategoryObj,
       brand:BrandObj,
       quantityProduct: number

@@ -2,7 +2,6 @@ import { getUserInfo, login, refreshTokenIfNeeded } from '@/api/auth';
 import { User } from '@/models/User';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-
 interface AuthContextType {
     isLoggedIn: boolean;
     userId: number | null;
@@ -14,7 +13,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
     isLoggedIn: false,
     userId: null,
-    login: async (username: string, password: string) => {},
+    login: async (_username: string, _password: string) => {},
     logout: () => {},
     getUserInfo: async () => null
 });
@@ -26,7 +25,9 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+        return localStorage.getItem('isLoggedIn') === 'true';
+    });
     const [userId, setUserId] = useState<number | null>(null);
 
     useEffect(() => {
@@ -53,6 +54,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (userInfo) {
                 setUserId(userInfo.userId);
             }
+            localStorage.setItem('isLoggedIn', 'true');
         } else {
             setIsLoggedIn(false);
             throw new Error('Login failed. Please check your credentials.');
@@ -60,6 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     const handleLogout = () => {
+        localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         setIsLoggedIn(false);

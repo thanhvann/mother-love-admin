@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import agent from "@/api/agent";
-import { useToast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -14,109 +14,136 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/heading";
+import { Separator } from "@/components/ui/separator";
+import agent from "@/api/agent";
+import { useToast } from "@/components/ui/use-toast";
 import ImageUpload from "@/components/image-upload";
+import { Layout } from "@/components/custom/layout";
 
-const editSchema = z.object({
+const brandSchema = z.object({
+  brandId: z.number().optional(),
   brandName: z.string().min(1, { message: "Brand Name Required" }),
-  image: z.array(z.string()).optional(),
+  image: z.string().optional(),
 });
 
-type editSchemaType = z.infer<typeof editSchema>;
+type brandSchemaType = z.infer<typeof brandSchema>;
 
-export const AddBrand: React.FC = () => {
-  const { toast } = useToast();
+export const BrandForm: React.FC = () => {
   const navigate = useNavigate();
-  const form = useForm<editSchemaType>({
-    resolver: zodResolver(editSchema),
-    defaultValues: {
+  const location = useLocation();
+  const { toast } = useToast();
+  const initialData = location.state || null;
+
+  const form = useForm<brandSchemaType>({
+    resolver: zodResolver(brandSchema),
+    defaultValues: initialData || {
+      brandId: undefined,
       brandName: "",
-      image: [],
+      image: "",
     },
   });
 
-  const onSubmit = async (values: editSchemaType) => {
+  const onSubmit = async (values: brandSchemaType) => {
     try {
-      console.log("Submitted values:", values);
-
-      // Check if values.image is defined and has at least one element
-      if (values.image && values.image.length > 0) {
-        await agent.Brand.addBrand({
-          brandName: values.brandName,
-          image: values.image[0], // Assuming your API expects a single image URL
-        });
+      if (initialData) {
+        await agent.Brand.updateBrand(values);
+        toast({ title: "Update Brand successfully!" });
       } else {
-        console.log("Image is required!");
-        return; // Exit early if image is not defined or empty
+        await agent.Brand.addBrand(values);
+        toast({ title: "Create new Brand successfully!" });
       }
-
-      toast({
-        title: "Create new Brand successfully!",
-      });
       navigate("/admin/brand");
     } catch (error: any) {
-      if (error.response) {
-        console.error("Error creating Brand:", error.response.data);
-      } else {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred";
-        toast({
-          title: errorMessage,
-        });
-        console.error("Error creating Brand:", error);
-      }
+      const errorMessage = error.response?.data?.message || "An error occurred";
+      toast({ title: errorMessage });
+      console.error("Error managing brand:", error);
     }
   };
 
   const handleImageUpload = (url: string) => {
-    const currentValue = form.getValues("image") || [];
-    if (!currentValue.includes(url)) {
-      form.setValue("image", [...currentValue, url]);
-    }
+    form.setValue("image", url);
   };
 
-  const handleImageRemove = (url: string) => {
-    const currentValue = form.getValues("image") || [];
-    form.setValue(
-      "image",
-      currentValue.filter((v) => v !== url)
-    );
+  const handleImageRemove = () => {
+    form.setValue("image", "");
   };
 
   return (
-    <div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full"
-        >
-          <FormField
-            control={form.control}
-            name="brandName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Brand name</FormLabel>
-                <Input type="text" {...field} />
-                <FormMessage />
-              </FormItem>
-            )}
+    <Layout>
+      <Layout.Body>
+        <div className="mt-2">
+          <Heading
+            title={initialData ? "Edit Brand" : "Create New Brand"}
+            description={
+              initialData ? "Edit the brand details" : "Add a new brand"
+            }
           />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <ImageUpload
-                  value={field.value || []}
-                  onChange={handleImageUpload}
-                  onRemove={handleImageRemove}
+        </div>
+        <Separator />
+        <div className="py-4">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8 w-full"
+            >
+              {initialData && (
+                <FormField
+                  control={form.control}
+                  name="brandId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Brand ID</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          {...field}
+                          className="read-only:bg-gray-100"
+                          readOnly
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Create</Button>
-        </form>
-      </Form>
-    </div>
+              )}
+              <FormField
+                control={form.control}
+                name="brandName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Brand Name</FormLabel>
+                    <FormControl>
+                      <Input type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value ? [field.value] : []}
+                        onChange={handleImageUpload}
+                        onRemove={handleImageRemove}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="ml-auto">
+                {initialData ? "Update" : "Create"}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </Layout.Body>
+    </Layout>
   );
 };

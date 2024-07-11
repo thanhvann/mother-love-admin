@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 
@@ -13,12 +15,10 @@ import {
 import { Icons } from "@/components/ui/icons";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import EditDialog from "../brand-detail/edit-brand-dialog";
 import agent from "@/api/agent";
 import { useToast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { BrandColumn } from "./columns";
-import { brandSchema } from "@/schema/brandSchema";
 
 interface CellActionProps {
   data: BrandColumn;
@@ -32,7 +32,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   );
   const { toast } = useToast();
   const navigate = useNavigate();
-  const brand = brandSchema.parse(data);
+  // const brand = brandSchema.parse(data);
 
   const onConfirm = async () => {
     try {
@@ -53,8 +53,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       setOpen(false);
     }
   };
+
   const handleEditClick = () => {
-    setDialogContent(<EditDialog brand={brand} />);
+    navigate("/admin/newBrand", { state: data });
   };
 
   return (

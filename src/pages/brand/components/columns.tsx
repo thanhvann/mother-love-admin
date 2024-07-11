@@ -67,23 +67,23 @@ export const columns: ColumnDef<BrandColumn>[] = [
   },
   {
     accessorKey: "image",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Image
-        </Button>
-      );
-    },
+    header: "Image",
     cell: ({ row }) => {
       return (
-        <img
-          src={row.original.image}
-          alt={row.original.brandName}
-          style={{ width: "50px", height: "auto" }}
-        />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <img
+            src={row.original.image}
+            alt={row.original.brandName}
+            style={{ width: "50px", height: "auto" }}
+          />
+        </div>
       );
     },
   },

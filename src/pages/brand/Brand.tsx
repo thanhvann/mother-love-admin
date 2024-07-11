@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
 import axios from "axios";
@@ -39,7 +40,7 @@ export const Brand = () => {
           description="Manage Brand in the shop"
         />
 
-        <Button onClick={() => navigate("/admin/newBrand")}>
+        <Button onClick={() => navigate("/admin/newBrand", { state: null })}>
           <Plus className="mr-2 h-4 w-4" />
           Add New
         </Button>

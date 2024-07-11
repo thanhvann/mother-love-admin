@@ -1,6 +1,6 @@
 // vouchers.tsx
 
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -13,16 +13,16 @@ import { columns } from "./components/columns";
 
 const Vouchers = () => {
   const [data, setData] = useState<VoucherObj[]>([]);
-  const [pageNo, ] = useState(0);
-  const [pageSize, ] = useState(10);
-  const [sortBy, ] = useState("voucherId");
-  const [sortDir, ] = useState<"asc" | "desc">("asc");
-  const [shouldRefresh, ] = useState<boolean>(false); 
+  const [pageNo] = useState(0);
+  const [pageSize] = useState(10);
+  const [sortBy] = useState("voucherId");
+  const [sortDir] = useState<"asc" | "desc">("asc");
+  const [shouldRefresh] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
-  }, [pageNo, pageSize, sortBy, sortDir, shouldRefresh]); 
+  }, [pageNo, pageSize, sortBy, sortDir, shouldRefresh]);
 
   const fetchData = async () => {
     try {
@@ -36,7 +36,10 @@ const Vouchers = () => {
   return (
     <>
       <div className="flex items-center justify-between pt-4">
-        <Heading title={`Vouchers (${data.length})`} description="Manage Vouchers" />
+        <Heading
+          title={`Vouchers (${data.length})`}
+          description="Manage Vouchers"
+        />
         <Button onClick={() => navigate("/admin/vouchers/new")}>
           <Plus className="mr-2 h-4 w-4" />
           Add New
@@ -44,7 +47,12 @@ const Vouchers = () => {
       </div>
       <Separator />
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <DataTable columns={columns} data={data} searchKey="voucherName" />
+        <DataTable
+          dataType="vouchers"
+          columns={columns}
+          data={data}
+          searchKey="voucherName"
+        />
       </div>
     </>
   );

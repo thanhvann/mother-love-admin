@@ -28,8 +28,7 @@ import { useToast } from "@/components/ui/use-toast";
 import agent from "@/api/agent";
 import { Layout } from "@/components/custom/layout";
 import { voucherSchema } from "@/schema/voucherSchema";
-
-
+import { VoucherStatuses } from "@/components/DataTable/filters";
 
 type VoucherSchemaType = z.infer<typeof voucherSchema>;
 
@@ -54,13 +53,18 @@ const AddVoucher: React.FC = () => {
   const onSubmit = async (values: VoucherSchemaType) => {
     const startDateTime = `${values.startDate}T00:00:00.000Z`;
     const endDateTime = `${values.endDate}T23:59:59.999Z`;
-    const updatedValues = { ...values, startDate: startDateTime, endDate: endDateTime };
+    const updatedValues = {
+      ...values,
+      startDate: startDateTime,
+      endDate: endDateTime,
+    };
 
     try {
       await agent.Voucher.addVoucher(updatedValues);
       toast({
         title: "Voucher added successfully!",
       });
+      navigate("/admin/vouchers");
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "An error occurred";
       toast({
@@ -83,7 +87,10 @@ const AddVoucher: React.FC = () => {
         <Separator />
         <div className="py-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8 w-full"
+            >
               <div className="md:grid md:grid-cols-3 gap-8">
                 <FormField
                   control={form.control}
@@ -196,14 +203,23 @@ const AddVoucher: React.FC = () => {
                     <FormItem>
                       <FormLabel>Status</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectItem value="ACTIVE">Active</SelectItem>
-                              <SelectItem value="INACTIVE">Inactive</SelectItem>
+                              {VoucherStatuses.map((status, index) => (
+                                <SelectItem value={status.value} key={index}>
+                                  <span className="flex items-center">
+                                    <status.icon className="mr-2 h-5 w-5 text-muted-foreground" />
+                                    {status.label}
+                                  </span>
+                                </SelectItem>
+                              ))}
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -214,9 +230,7 @@ const AddVoucher: React.FC = () => {
                 />
               </div>
               <div className="space-x-2">
-                <Button type="submit">
-                  Add Voucher
-                </Button>
+                <Button type="submit">Add Voucher</Button>
                 <Button type="button" variant="outline" onClick={handleCancel}>
                   Cancel
                 </Button>

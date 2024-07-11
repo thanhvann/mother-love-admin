@@ -232,28 +232,12 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
                         </FormItem>
                       )}
                     />
-                    {/* <FormField
-                      name="userId" // No need to bind control here
-                      render={() => (
-                        <FormItem>
-                          <FormLabel>Author</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Author"
-                              value={user?.fullName || ""}
-                              readOnly
-                            />
-                          </FormControl>
-                          {/* No FormMessage needed here because it's not controlled by form.control */}
-                    {/* </FormItem>
-                      )}
-                    /> */}
                     <FormField
                       control={form.control}
                       name="productId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Product</FormLabel>
+                          <FormLabel className="block my-2">Product</FormLabel>
                           <FormControl>
                             <ProductPopover
                               onSelect={handleProductSelect}

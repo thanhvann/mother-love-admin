@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
 import agent from "@/api/agent"; // Replace with your actual API agent
 import {
@@ -64,7 +65,7 @@ const ProductPopover: React.FC<ProductPopoverProps> = ({
           className="h-8 border-dotted border-2 border-slate-400"
         >
           <PlusCircledIcon className="mr-2 h-4 w-4" />
-          Add Product
+          Product
           {selectedProducts.length > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
@@ -135,7 +136,7 @@ const ProductPopover: React.FC<ProductPopoverProps> = ({
                     onSelect={() => onSelect(null)}
                     className="justify-center text-center"
                   >
-                    Clear filters
+                    Clear all
                   </CommandItem>
                 </CommandGroup>
               </>

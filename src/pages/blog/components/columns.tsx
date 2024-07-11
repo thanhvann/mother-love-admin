@@ -73,18 +73,19 @@ export const columns: ColumnDef<BlogColumn>[] = [
   },
   {
     accessorKey: "content",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Content
-          <Icons.sort className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    header: "Content",
+    cell: ({ row }) => {
+      const stripHtmlTags = (html: any) => html.replace(/<[^>]*>?/gm, "");
+      const truncateText = (text: any, length: any) =>
+        text.length > length ? text.substring(0, length) + "..." : text;
+
+      const plainText = stripHtmlTags(row.original.content);
+      const truncatedText = truncateText(plainText, 100); // Adjust the length as needed
+
+      return <span>{truncatedText}</span>;
     },
   },
+
   {
     accessorKey: "image",
     header: ({ column }) => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { ProductType, productSchema } from "@/schema/productSchema";
+import { ProductType } from "@/schema/productSchema";
 import { useToast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modal/alert-modal";
 import agent from "@/api/agent";
@@ -24,9 +25,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [dialogContent, setDialogContent] = useState<React.ReactNode | null>(
-    null
-  );
+  const [dialogContent] = useState<React.ReactNode | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   // const dataToValidate = {

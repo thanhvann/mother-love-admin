@@ -8,7 +8,6 @@ import { Products } from "@/pages/products/Products";
 import { Category } from "@/pages/category/Category";
 import { AddCategory } from "@/pages/category/category-detail/add-category-form";
 import { Brand } from "@/pages/brand/Brand";
-import { AddBrand } from "@/pages/brand/brand-detail/add-brand-form";
 import { Blog } from "@/pages/blog/Blog";
 import { AddBlog } from "@/pages/blog/blog-detail/add-blog-form";
 import Vouchers from "@/pages/vouchers/Vouchers";
@@ -16,6 +15,7 @@ import AddVoucher from "@/pages/vouchers/voucher-detail/add-voucher-form";
 import Orders from "@/pages/order/Orders";
 import OrderDetail from "@/pages/order/OrderDetail";
 import { ProductForm } from "@/pages/products/product-detail/add-product-form";
+import { BrandForm } from "@/pages/brand/brand-detail/add-brand-form";
 
 const PrivateRoute = ({ element, ...rest }: any) => {
   const { isLoggedIn } = useAuth();
@@ -72,13 +72,17 @@ const router = createBrowserRouter([
         path: "/admin/vouchers/new",
         element: <AddVoucher />,
       },
+      // {
+      //   path: "/admin/vouchers/update",
+      //   element: <AddVoucher />,
+      // },
       {
         path: "/admin/brand",
         element: <Brand />,
       },
       {
         path: "/admin/newBrand",
-        element: <AddBrand />,
+        element: <BrandForm />,
       },
       {
         path: "/admin/blog",

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -45,7 +47,7 @@ import {
 import { Milkstatuses } from "@/components/DataTable/filters";
 import { ProductsObj } from "@/models/Product";
 
-interface ManageProductForm {}
+export interface ManageProductForm {}
 
 interface Category {
   categoryId: number;

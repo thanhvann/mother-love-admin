@@ -4,7 +4,6 @@ import Dashboard from "./../pages/dashboard";
 import Login from "@/pages/auth/Login";
 import { useAuth } from "@/context/AuthContext";
 import { Products } from "@/pages/products/Products";
-import { ProductForm } from "@/pages/products/product-detail/ProductForm";
 import { Category } from "@/pages/category/Category";
 import { AddCategory } from "@/pages/category/category-detail/add-category-form";
 import { Brand } from "@/pages/brand/Brand";
@@ -15,6 +14,7 @@ import Vouchers from "@/pages/vouchers/Vouchers";
 import AddVoucher from "@/pages/vouchers/voucher-detail/add-voucher-form";
 import Orders from "@/pages/order/Orders";
 import OrderDetail from "@/pages/order/OrderDetail";
+import { ProductForm } from "@/pages/products/product-detail/add-product-form";
 
 const PrivateRoute = ({ element, ...rest }: any) => {
   const { isLoggedIn } = useAuth();

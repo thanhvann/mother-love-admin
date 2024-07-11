@@ -10,16 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
-import { ProductColumn } from "./columns";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { productSchema } from "@/schema/productSchema";
-import EditDialog from "../product-detail/edit-dialog";
+import { ProductType, productSchema } from "@/schema/productSchema";
 import { useToast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modal/alert-modal";
 import agent from "@/api/agent";
+import { useNavigate } from "react-router-dom";
 
 interface CellActionProps {
-  data: ProductColumn;
+  data: ProductType;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -29,8 +28,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     null
   );
   const { toast } = useToast();
-
-  const product = productSchema.parse(data);
+  const navigate = useNavigate();
+  // const dataToValidate = {
+  //   ...data,
+  //   status:
+  //     typeof data.status === "string" ? parseInt(data.status) : data.status,
+  // };
+  // const product = productSchema.parse(dataToValidate);
 
   const onConfirm = async () => {
     setLoading(true);
@@ -52,7 +56,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   };
 
   const handleEditClick = () => {
-    setDialogContent(<EditDialog product={product} />);
+    navigate("/admin/newMilk", { state: data });
   };
 
   return (

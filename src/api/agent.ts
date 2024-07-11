@@ -123,7 +123,9 @@ const Address = {
   updateAddress: (addressId: number, updatedAddress: any) => {
     return requests.put(`address`, updatedAddress);
   },
-  addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
+  // addNewAddress: (newAddress: any) => requests.post(`http://motherlove-api.onrender.com/api/v1/address`, newAddress),
+  addNewAddress: (newAddress: any) => requests.post(`http://localhost:8080/api/v1/address`, newAddress),
+  // addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
 };
 
 const Orders = {
@@ -136,6 +138,10 @@ const Orders = {
   },
 };
 
+const User = {
+  list: createListEndpoint('users', 'userId')
+}
+
 const agent = {
   Products,
   Brand,
@@ -143,7 +149,8 @@ const agent = {
   Address,
   Voucher,
   Blog,
-  Orders
+  Orders,
+  User
 };
 
 export default agent;

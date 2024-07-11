@@ -43,6 +43,7 @@ export const Blog = () => {
             lastModifiedDate: formatDate(item.lastModifiedDate),
           };
         });
+
         setData(formattedData); // Assuming the data is in the `data` field of the response
       } catch (error) {
         console.error("Error fetching data:", error);

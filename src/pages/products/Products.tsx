@@ -6,10 +6,6 @@ import { Plus } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/DataTable/data-table";
-import { Layout } from "@/components/custom/layout";
-import { Search } from "@/components/search";
-import ThemeSwitch from "@/components/theme-switch";
-import { UserNav } from "@/components/user-nav";
 import agent from "@/api/agent";
 import { ProductsObj } from "@/models/Product";
 
@@ -25,7 +21,16 @@ export const Products = () => {
     const getData = async () => {
       try {
         const result = await agent.Products.list(pageNo, pageSize);
-        setData(result.content); // Assuming the data is in the `content` field of the response
+        const cleanedData = result.content.map((product: ProductsObj) => {
+          if (typeof product.image === "string") {
+            // Remove brackets and split the string into an array
+            const imageString = product.image as string;
+            const cleanedImage = imageString.replace(/[\[\]]/g, "").split(",");
+            return { ...product, image: cleanedImage };
+          }
+          return product;
+        });
+        setData(cleanedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -41,7 +46,7 @@ export const Products = () => {
           description="Manage Product in the shop"
         />
 
-        <Button onClick={() => navigate("/admin/newMilk")}>
+        <Button onClick={() => navigate("/admin/newMilk", { state: null })}>
           <Plus className="mr-2 h-4 w-4" />
           Add New
         </Button>
@@ -53,17 +58,3 @@ export const Products = () => {
     </>
   );
 };
-// <Layout>
-//   {/* ===== Top Heading ===== */}
-//   <Layout.Header sticky>
-//     <div className="ml-auto flex items-center space-x-4">
-//       <ThemeSwitch />
-//       <UserNav />
-//     </div>
-//   </Layout.Header>
-
-//   <Layout.Body>
-{
-  /* </Layout.Body>
-    </Layout> */
-}

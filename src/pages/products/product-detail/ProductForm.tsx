@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -43,43 +42,13 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Milkstatuses } from "@/components/DataTable/filters";
-import { ProductsObj } from "@/models/Product";
-
-interface ManageProductForm {}
-
-interface Category {
-  categoryId: number;
-  categoryName: string;
-}
-interface Brand {
-  brandId: number;
-  brandName: string;
-  image: string;
-  products: ProductsObj;
-}
-
-const productSchema = z.object({
-  productId: z.number().optional(),
-  productName: z.string().min(1, { message: "Product Name Required" }),
-  description: z.string(),
-  price: z.coerce.number().refine((value) => value > 0, {
-    message: "Price must be greater than 0.",
-  }),
-  status: z.string(),
-  image: z.array(z.string()),
-  category: z.object({
-    categoryId: z.coerce.number().refine((value) => value > 0, {
-      message: "Category Required.",
-    }),
-  }),
-  brand: z.object({
-    brandId: z.coerce.number().refine((value) => value > 0, {
-      message: "Brand Required.",
-    }),
-  }),
-});
-
-type productSchemaType = z.infer<typeof productSchema>;
+import {
+  ManageProductForm,
+  Category,
+  Brand,
+  productSchemaType,
+  productSchema,
+} from "./add-product-form";
 
 export const ProductForm: React.FC<ManageProductForm> = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -311,7 +280,7 @@ export const ProductForm: React.FC<ManageProductForm> = () => {
                                             ? ""
                                             : cat.categoryId
                                         );
-
+                                        log;
                                         setOpenCategory(false);
                                       }}
                                     >
@@ -369,32 +338,30 @@ export const ProductForm: React.FC<ManageProductForm> = () => {
                               />
                               <CommandEmpty>No brand found.</CommandEmpty>
                               <CommandGroup>
-                                <CommandList>
-                                  {brand.map((brand) => (
-                                    <CommandItem
-                                      key={brand.brandId}
-                                      value={brand.brandId.toString()}
-                                      onSelect={() => {
-                                        field.onChange(
-                                          brand.brandId === field.value
-                                            ? ""
-                                            : brand.brandId
-                                        );
-                                        setOpenBrand(false);
-                                      }}
-                                    >
-                                      <CheckIcon
-                                        className={cn(
-                                          "ml-auto h-4 w-4",
-                                          field.value === brand.brandId
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                      {brand.brandName}
-                                    </CommandItem>
-                                  ))}
-                                </CommandList>
+                                {brand.map((brand) => (
+                                  <CommandItem
+                                    key={brand.brandId}
+                                    value={brand.brandId.toString()}
+                                    onSelect={() => {
+                                      field.onChange(
+                                        brand.brandId === field.value
+                                          ? ""
+                                          : brand.brandId
+                                      );
+                                      setOpenBrand(false);
+                                    }}
+                                  >
+                                    <CheckIcon
+                                      className={cn(
+                                        "ml-auto h-4 w-4",
+                                        field.value === brand.brandId
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    {brand.brandId}
+                                  </CommandItem>
+                                ))}
                               </CommandGroup>
                             </Command>
                           </PopoverContent>

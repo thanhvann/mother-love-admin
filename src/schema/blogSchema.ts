@@ -7,12 +7,13 @@ export const blogSchema = z.object({
     createdDate: z.string(),
     lastModifiedDate: z.string(),
     user: z.object({
+        userId: z.string(),
         fullName: z.string(),
     }),
-    product: z.object({
-        productName: z.string(),
+    product: 
+    z.object({
+    productId: z.array( z.number())
     })
-
 
 });
 

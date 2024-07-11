@@ -35,7 +35,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   // const blog = blogSchema.parse(data);
-  console.log("dataaaaaaaaaaaaaaaaaa", data);
 
   const onConfirm = async () => {
     try {

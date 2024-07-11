@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Table } from "@tanstack/react-table";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { statuses } from "./filters";
+import { Milkstatuses } from "./filters";
 import { Button } from "@/components/ui/button";
 import { Icons } from "../ui/icons";
 
@@ -31,7 +31,7 @@ export function DataTableToolbar<TData>({
           <DataTableFacetedFilter
             column={table.getColumn("status")}
             title="Status"
-            options={statuses}
+            options={Milkstatuses}
           />
         )}
         {isFiltered && (

@@ -7,7 +7,7 @@ export interface BlogObj {
     content: string,
     image: string,
     user: User,
-    product: ProductsObj,
+    product: ProductsObj[],
     createdDate: string,
     lastModifiedDate: string
 }

@@ -47,6 +47,8 @@ export function DataTableToolbar<TData>({
   const staffColumn = getColumnSafely("user_fullName");
   const statusColumn = getColumnSafely("status");
 
+  const blogProductOptions: FilterOption[] = [];
+
   const getFilterOptions = (
     data: any[],
     accessor: (item: any) => string
@@ -62,11 +64,29 @@ export function DataTableToolbar<TData>({
   const categoryOptions = categoryColumn
     ? getFilterOptions(data, (item: any) => item.category?.categoryName)
     : [];
-  const blogProductOptions = blogProductColumn
-    ? getFilterOptions(data, (item: any) =>
-        item.product?.map((p: ProductsObj) => p.productName).join(",")
-      )
-    : [];
+
+  if (blogProductColumn && blogProductColumn.getSize() > 0) {
+    const allBlogProductNames: string[] = [];
+
+    data.forEach((item: any) => {
+      allBlogProductNames.push(
+        ...item.product.map((product: ProductsObj) => product.productName)
+      );
+    });
+
+    const uniqueBlogProductNamesSet = new Set(allBlogProductNames);
+    const uniqueBlogProductNames = Array.from(
+      uniqueBlogProductNamesSet
+    ) as string[];
+
+    const tagsData = uniqueBlogProductNames.map((productName) => ({
+      label: productName,
+      value: productName,
+    }));
+
+    blogProductOptions.push(...tagsData);
+  }
+
   const staffOptions = staffColumn
     ? getFilterOptions(data, (item: any) => item.user?.fullName)
     : [];

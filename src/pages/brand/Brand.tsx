@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
 import axios from "axios";
@@ -39,14 +40,19 @@ export const Brand = () => {
           description="Manage Brand in the shop"
         />
 
-        <Button onClick={() => navigate("/admin/newBrand")}>
+        <Button onClick={() => navigate("/admin/newBrand", { state: null })}>
           <Plus className="mr-2 h-4 w-4" />
           Add New
         </Button>
       </div>
       <Separator />
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <DataTable columns={columns} data={data} searchKey="brandName" />
+        <DataTable
+          columns={columns}
+          data={data}
+          searchKey="brandName"
+          placeholder="Search by Brand Name.."
+        />
       </div>
     </>
   );

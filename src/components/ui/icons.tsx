@@ -32,11 +32,15 @@ import {
   ChevronsRight,
   SlidersHorizontal,
   X,
+  Ellipsis,
+  PackageX,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
 
 export const Icons = {
+  loading: Ellipsis,
+  outStock: PackageX,
   x: X,
   previous: ChevronLeft,
   speedPrevious: ChevronsLeft,

@@ -19,6 +19,9 @@ export type BlogColumn = {
   createdDate: string;
   lastModifiedDate: string;
 };
+interface Product {
+  productName: string;
+}
 
 export const columns: ColumnDef<BlogColumn>[] = [
   {
@@ -73,18 +76,19 @@ export const columns: ColumnDef<BlogColumn>[] = [
   },
   {
     accessorKey: "content",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Content
-          <Icons.sort className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    header: "Content",
+    cell: ({ row }) => {
+      const stripHtmlTags = (html: any) => html.replace(/<[^>]*>?/gm, "");
+      const truncateText = (text: any, length: any) =>
+        text.length > length ? text.substring(0, length) + "..." : text;
+
+      const plainText = stripHtmlTags(row.original.content);
+      const truncatedText = truncateText(plainText, 100); // Adjust the length as needed
+
+      return <span>{truncatedText}</span>;
     },
   },
+
   {
     accessorKey: "image",
     header: ({ column }) => {
@@ -110,6 +114,9 @@ export const columns: ColumnDef<BlogColumn>[] = [
   {
     accessorKey: "user.fullName",
     header: "Staff",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "product",
@@ -118,6 +125,17 @@ export const columns: ColumnDef<BlogColumn>[] = [
       const products = row.original.product;
       return products.map((p) => p.productName).join(", ");
     },
+    filterFn: (row, _columnId, filterValue) => {
+      const productArray = row.original.product as Product[];
+
+      // Check if any product in the array matches the filter value
+      const result = productArray.some((product) =>
+        filterValue.includes(product.productName)
+      );
+      return result;
+    },
+    // Optionally, specify the accessorFn to extract product names
+    accessorFn: (row) => row.product.map((product) => product.productName),
   },
   {
     accessorKey: "createdDate",

@@ -50,6 +50,20 @@ export const columns: ColumnDef<ProductColumn>[] = [
     },
   },
   {
+    accessorKey: "productId",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Product ID
+          <Icons.sort className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
@@ -74,20 +88,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
       return value.includes(row.getValue(id));
     },
   },
-  {
-    accessorKey: "productId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Product ID
-          <Icons.sort className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
+
   {
     accessorKey: "productName",
     header: ({ column }) => {
@@ -124,10 +125,16 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "category.categoryName",
     header: "Category",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "brand.brandName",
     header: "Brand",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     id: "actions",

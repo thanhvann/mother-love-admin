@@ -72,10 +72,6 @@ const router = createBrowserRouter([
         path: "/admin/vouchers/new",
         element: <AddVoucher />,
       },
-      // {
-      //   path: "/admin/vouchers/update",
-      //   element: <AddVoucher />,
-      // },
       {
         path: "/admin/brand",
         element: <Brand />,

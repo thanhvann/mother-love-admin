@@ -19,6 +19,9 @@ export type BlogColumn = {
   createdDate: string;
   lastModifiedDate: string;
 };
+interface Product {
+  productName: string;
+}
 
 export const columns: ColumnDef<BlogColumn>[] = [
   {
@@ -111,6 +114,9 @@ export const columns: ColumnDef<BlogColumn>[] = [
   {
     accessorKey: "user.fullName",
     header: "Staff",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "product",
@@ -119,6 +125,17 @@ export const columns: ColumnDef<BlogColumn>[] = [
       const products = row.original.product;
       return products.map((p) => p.productName).join(", ");
     },
+    filterFn: (row, _columnId, filterValue) => {
+      const productArray = row.original.product as Product[];
+
+      // Check if any product in the array matches the filter value
+      const result = productArray.some((product) =>
+        filterValue.includes(product.productName)
+      );
+      return result;
+    },
+    // Optionally, specify the accessorFn to extract product names
+    accessorFn: (row) => row.product.map((product) => product.productName),
   },
   {
     accessorKey: "createdDate",

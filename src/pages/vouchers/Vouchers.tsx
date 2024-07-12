@@ -52,6 +52,7 @@ const Vouchers = () => {
           columns={columns}
           data={data}
           searchKey="voucherName"
+          placeholder="Search by Voucher Name..."
         />
       </div>
     </>

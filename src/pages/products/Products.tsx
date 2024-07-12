@@ -55,7 +55,13 @@ export const Products = () => {
       </div>
       <Separator />
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <DataTable columns={columns} data={data} searchKey="productName" />
+        <DataTable
+          columns={columns}
+          data={data}
+          searchKey="productName"
+          dataType="products"
+          placeholder="Search Product Name..."
+        />
       </div>
     </>
   );

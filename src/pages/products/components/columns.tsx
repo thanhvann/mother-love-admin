@@ -125,10 +125,16 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "category.categoryName",
     header: "Category",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "brand.brandName",
     header: "Brand",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     id: "actions",

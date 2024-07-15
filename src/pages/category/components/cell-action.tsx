@@ -11,9 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
-import { useParams, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { productSchema } from "@/schema/productSchema";
 import EditDialog from "../category-detail/edit-category-dialog";
 import { CategoryColumn } from "./columns";
 import { categorySchema } from "@/schema/categorySchema";
@@ -32,7 +30,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     null
   );
   const { toast } = useToast();
-  const navigate = useNavigate();
   const category = categorySchema.parse(data);
 
   const onConfirm = async () => {

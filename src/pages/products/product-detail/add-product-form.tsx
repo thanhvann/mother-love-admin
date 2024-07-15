@@ -67,6 +67,9 @@ const productSchema = z.object({
   price: z.coerce.number().refine((value) => value > 0, {
     message: "Price must be greater than 0.",
   }),
+  quantityProduct: z.coerce.number().min(1, {
+    message: "Quantity Required.",
+  }),
   status: z.string(),
   image: z.array(z.string()),
   category: z.object({
@@ -84,7 +87,7 @@ const productSchema = z.object({
 type productSchemaType = z.infer<typeof productSchema>;
 
 export const ProductForm: React.FC<ManageProductForm> = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -231,6 +234,19 @@ export const ProductForm: React.FC<ManageProductForm> = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="quantityProduct"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Quantity</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>

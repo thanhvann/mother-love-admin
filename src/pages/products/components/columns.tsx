@@ -14,6 +14,7 @@ export type ProductColumn = {
   price: number;
   status: string;
   image: string[];
+  quantityProduct: number;
   category: {
     categoryId: number;
     categoryName: string;
@@ -106,6 +107,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "description",
     header: "Description",
+  },
+  {
+    accessorKey: "quantityProduct",
+    header: "Quantity",
   },
   {
     accessorKey: "price",

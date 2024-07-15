@@ -1,5 +1,4 @@
 import { z } from "zod";
-import axios from "axios";
 export const productSchema = z.object({
   productId: z.number(),
   productName: z.string(),

@@ -11,16 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/ui/icons";
-import { useParams, useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { productSchema } from "@/schema/productSchema";
-import EditDialog from "../blog-detail/edit-blog";
-import { categorySchema } from "@/schema/categorySchema";
+import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import agent from "@/api/agent";
 import { useToast } from "@/components/ui/use-toast";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { BlogColumn } from "./columns";
-import { blogSchema } from "@/schema/blogSchema";
 
 interface CellActionProps {
   data: BlogColumn;
@@ -29,9 +25,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [dialogContent, setDialogContent] = useState<React.ReactNode | null>(
-    null
-  );
+  const [dialogContent] = useState<React.ReactNode | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   // const blog = blogSchema.parse(data);
@@ -54,10 +48,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       setLoading(false);
       setOpen(false);
     }
-  };
-  const handleEditClick = () => {
-    // setDialogContent(<EditDialog category={blog} />);
-    navigate("/admin/newBlog", { state: data });
   };
 
   return (

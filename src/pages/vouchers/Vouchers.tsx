@@ -10,14 +10,17 @@ import { DataTable } from "@/components/DataTable/data-table";
 import agent from "@/api/agent";
 import { VoucherObj } from "@/models/Voucher";
 import { columns } from "./components/columns";
+import { DataTablePagination } from "@/components/DataTable/data-table-pagination";
 
 const Vouchers = () => {
   const [data, setData] = useState<VoucherObj[]>([]);
-  const [pageNo] = useState(0);
-  const [pageSize] = useState(10);
+  const [pageNo, setPageNo] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   const [sortBy] = useState("voucherId");
   const [sortDir] = useState<"asc" | "desc">("asc");
   const [shouldRefresh] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +31,7 @@ const Vouchers = () => {
     try {
       const result = await agent.Voucher.manageVouchers(pageNo, pageSize);
       setData(result.content);
+      setTotalPages(result.totalPages);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -55,6 +59,13 @@ const Vouchers = () => {
           placeholder="Search by Voucher Name..."
         />
       </div>
+      <DataTablePagination
+        currentPage={pageNo}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        setPageNo={setPageNo}
+        setPageSize={setPageSize}
+      />
     </>
   );
 };

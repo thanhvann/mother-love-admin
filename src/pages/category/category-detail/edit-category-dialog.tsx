@@ -19,7 +19,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { statuses } from "@/components/DataTable/filters";
 import { CategoryType } from "@/schema/categorySchema";
 import agent from "@/api/agent";
 import { useToast } from "@/components/ui/use-toast";

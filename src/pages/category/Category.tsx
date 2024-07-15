@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
-import axios from "axios";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -9,14 +9,15 @@ import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/DataTable/data-table";
 import { CategoryObj } from "@/models/Category";
 import agent from "@/api/agent";
+import { DataTablePagination } from "@/components/DataTable/data-table-pagination";
 
 export const Category = () => {
   const [data, setData] = useState<CategoryObj[]>([]);
   const [pageNo, setPageNo] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState("categoryId");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [totalRows, setTotalRows] = useState(0);
+  const [sortBy] = useState("categoryId");
+  const [sortDir] = useState<"asc" | "desc">("asc");
+  const [totalPages, setTotalPages] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,6 +25,7 @@ export const Category = () => {
       try {
         const result = await agent.Category.list(pageNo, pageSize);
         setData(result.content); // Assuming the data is in the `data` field of the response
+        setTotalPages(result.totalPages);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -52,6 +54,13 @@ export const Category = () => {
           placeholder="Search by Category Name..."
         />
       </div>
+      <DataTablePagination
+        currentPage={pageNo}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        setPageNo={setPageNo}
+        setPageSize={setPageSize}
+      />
     </>
   );
 };

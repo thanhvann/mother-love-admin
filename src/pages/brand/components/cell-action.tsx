@@ -27,9 +27,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [dialogContent, setDialogContent] = useState<React.ReactNode | null>(
-    null
-  );
+  const [dialogContent] = useState<React.ReactNode | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   // const brand = brandSchema.parse(data);

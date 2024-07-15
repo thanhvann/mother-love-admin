@@ -13,7 +13,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { User } from "@/models/User";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function UserNav() {
   const { isLoggedIn, logout, getUserInfo } = useAuth();

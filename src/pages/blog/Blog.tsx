@@ -8,13 +8,15 @@ import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/DataTable/data-table";
 import agent from "@/api/agent";
 import { BlogObj } from "@/models/Blog";
+import { DataTablePagination } from "@/components/DataTable/data-table-pagination";
 
 export const Blog = () => {
   const [data, setData] = useState<BlogObj[]>([]);
   const [pageNo, setPageNo] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState("categoryId");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortBy] = useState("categoryId");
+  const [sortDir] = useState<"asc" | "desc">("asc");
+  const [totalPages, setTotalPages] = useState(0);
   const navigate = useNavigate();
 
   const formatDate = (timestamp: string): string => {
@@ -45,6 +47,7 @@ export const Blog = () => {
         });
 
         setData(formattedData); // Assuming the data is in the `data` field of the response
+        setTotalPages(result.totalPages);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -74,6 +77,13 @@ export const Blog = () => {
           placeholder="Search by Title..."
         />
       </div>
+      <DataTablePagination
+        currentPage={pageNo}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        setPageNo={setPageNo}
+        setPageSize={setPageSize}
+      />
     </>
   );
 };

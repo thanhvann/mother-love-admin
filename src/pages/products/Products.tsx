@@ -10,13 +10,15 @@ import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/DataTable/data-table";
 import agent from "@/api/agent";
 import { ProductsObj } from "@/models/Product";
+import { DataTablePagination } from "@/components/DataTable/data-table-pagination";
 
 export const Products = () => {
   const [data, setData] = useState<ProductsObj[]>([]);
   const [pageNo, setPageNo] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState("productId");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortBy] = useState("productId");
+  const [sortDir] = useState<"asc" | "desc">("asc");
+  const [totalPages, setTotalPages] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +34,7 @@ export const Products = () => {
           }
           return product;
         });
+        setTotalPages(result.totalPages);
         setData(cleanedData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -44,8 +47,8 @@ export const Products = () => {
     <>
       <div className="flex items-center justify-between pt-4">
         <Heading
-          title={`Product (${data.length})`}
-          description="Manage Product in the shop"
+          title={`Milk (${data.length})`}
+          description="Manage Milk in the shop"
         />
 
         <Button onClick={() => navigate("/admin/newMilk", { state: null })}>
@@ -63,6 +66,13 @@ export const Products = () => {
           placeholder="Search Product Name..."
         />
       </div>
+      <DataTablePagination
+        currentPage={pageNo}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        setPageNo={setPageNo}
+        setPageSize={setPageSize}
+      />
     </>
   );
 };

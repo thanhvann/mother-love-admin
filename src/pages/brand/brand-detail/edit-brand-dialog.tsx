@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -74,7 +75,7 @@ export default function EditBrandDialog({ brand }: EditProps) {
       return onSubmit(data);
     })();
   };
-  const handleImageRemove = (url: string) => {
+  const handleImageRemove = (_url?: string) => {
     form.setValue("image", []);
   };
 

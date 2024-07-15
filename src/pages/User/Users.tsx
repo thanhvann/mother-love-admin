@@ -75,7 +75,7 @@ const Users: React.FC = () => {
                                 <option value="ROLE_STAFF" className="text-black">Staff</option>
                                 <option value="ROLE_MEMBER" className="text-black">Member</option>
                             </select>
-                            <Button onClick={() => navigate("/admin/vouchers/new")}>
+                            <Button onClick={() => navigate("/admin/create-staff")}>
                                 Add New
                             </Button>
                         </>

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 const sleep = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const BASE_URL =  "http://localhost:8080/api/v1/";
+const BASE_URL = "http://localhost:8080/api/v1/";
 
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.withCredentials = true;
@@ -136,9 +136,7 @@ const Address = {
   updateAddress: (updatedAddress: any) => {
     return requests.put(`address`, updatedAddress);
   },
-  // addNewAddress: (newAddress: any) => requests.post(`http://motherlove-api.onrender.com/api/v1/address`, newAddress),
   addNewAddress: (newAddress: any) => requests.post(`http://localhost:8080/api/v1/address`, newAddress),
-  // addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
 };
 
 const Orders = {
@@ -149,11 +147,19 @@ const Orders = {
   searchOrders: (pageNo: number, pageSize: number, sortBy: string = "orderId", sortDir: string = "asc", orderDateFrom: string, orderDateTo: string) => {
     return requests.get(`orders/search?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&orderDateFrom=${orderDateFrom}&orderDateTo=${orderDateTo}`);
   },
+  searchOrdersByStatus: (pageNo: number, pageSize: number, sortBy: string = "orderId", status: string, sortDir: string = "asc") => {
+    return requests.get(`orders/search?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&status=${status}&sortDir=${sortDir}`);
+  },
+  updateOrder: (orderId: number) => {
+    return requests.put(`orders?orderId=${orderId}`, {});
+  },
 };
 
-const User = {
-  list: createListEndpoint('users', 'userId')
-}
+const Users = {
+  list: (pageNo: number, pageSize: number, sortBy: string = "userId", sortDir: string = "asc") => {
+    return requests.get(`users?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  },
+};
 
 const agent = {
   Products,
@@ -163,7 +169,7 @@ const agent = {
   Voucher,
   Blog,
   Orders,
-  User
+  Users
 };
 
 export default agent;

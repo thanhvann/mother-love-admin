@@ -46,16 +46,11 @@ export const sidelinks: SideLink[] = [
     href: "/admin",
     icon: <IconLayoutDashboard size={18} />,
   },
+
   {
-    title: "Staffs",
+    title: "Users",
     label: "",
-    href: "/staffs",
-    icon: <IconUsers size={18} />,
-  },
-  {
-    title: "Customers",
-    label: "",
-    href: "/customers",
+    href: "/admin/users",
     icon: <IconUsers size={18} />,
   },
   {

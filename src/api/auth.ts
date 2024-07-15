@@ -71,3 +71,45 @@ export const getUserInfo = async (): Promise<User | null> => {
         return null;
     }
 };
+export const changePassword = async (oldPassword: string, newPassword: string): Promise<boolean> => {
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken || isAccessTokenExpired(accessToken)) {
+            throw new Error('Access token is missing or expired');
+        }
+        await axios.post('/auth/change-password', {
+            oldPassword,
+            newPassword
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        console.log('Password changed successfully');
+        return true;
+    } catch (error) {
+        console.error('Failed to change password:', error);
+        return false;
+    }
+}
+
+export const registerStaff = async (staffDetails: { username: string, fullName:string, email: string, password:string, phone: string, gender: string }): Promise<boolean> => {
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+            throw new Error('Access token is missing');
+        }
+
+        await axios.post(`${BASE_URL}auth/register/staff`, staffDetails, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        console.log('Staff registration successful');
+        return true;
+    } catch (error) {
+        console.error('Failed to register staff:', error);
+        return false;
+    }
+};

@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
-import { UserAuthForm } from "./components/user-auth-form";
+import { StaffRegistrationForm } from "./components/sign-up-staff-form";
 
-export default function Login() {
+export default function SignupStaff() {
   return (
     <>
       <div className="container grid h-svh flex-col items-center justify-center bg-primary-foreground lg:max-w-none lg:px-0">
@@ -23,12 +23,12 @@ export default function Login() {
           </div>
           <Card className="p-6">
             <div className="flex flex-col space-y-2 text-left">
-              <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
+              <h1 className="text-2xl font-semibold tracking-tight">Create staff</h1>
               <p className="text-sm text-muted-foreground">
-                Enter your email and password 
+                Enter staff email 
               </p>
             </div>
-            <UserAuthForm />
+            <StaffRegistrationForm />
      
           </Card>
         </div>

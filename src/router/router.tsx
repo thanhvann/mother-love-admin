@@ -14,6 +14,9 @@ import Vouchers from "@/pages/vouchers/Vouchers";
 import AddVoucher from "@/pages/vouchers/voucher-detail/add-voucher-form";
 import Orders from "@/pages/order/Orders";
 import OrderDetail from "@/pages/order/OrderDetail";
+import ChangePassword from "@/pages/auth/ChangePassword";
+import Users from "@/pages/User/Users";
+import SignupStaff from "@/pages/auth/Sign-up-staff";
 import { ProductForm } from "@/pages/products/product-detail/add-product-form";
 import { BrandForm } from "@/pages/brand/brand-detail/add-brand-form";
 
@@ -31,6 +34,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
+  
+  },
+  {
+    path: "/change-password",
+    element: <ChangePassword />,
   },
   {
     path: "/admin",
@@ -45,6 +53,10 @@ const router = createBrowserRouter([
         element: <Products />,
       },
       {
+        path: "/admin/create-staff",
+        element: <SignupStaff />,
+      },
+      {
         path: "/admin/newMilk",
         element: <ProductForm />,
       },
@@ -55,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/newCategory",
         element: <AddCategory />,
+      },
+      {
+        path: "/admin/users",
+        element: <Users />,
       },
       {
         path: "/admin/vouchers",

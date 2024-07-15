@@ -1,10 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 500));
+const sleep = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// const BASE_URL = "https://motherlove-api.onrender.com/api/v1/";
-const BASE_URL = "http://localhost:8080/api/v1/";
+const BASE_URL =  "http://localhost:8080/api/v1/";
 
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.withCredentials = true;
@@ -29,37 +28,39 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+const handleError = (error: any) => {
+  const { data, status } = error.response;
+  switch (status) {
+    case 400:
+      if (data.errors) {
+        const modelStateError: string[] = [];
+        for (const key in data.errors) {
+          if (data.errors[key]) {
+            modelStateError.push(data.errors[key]);
+          }
+        }
+        throw modelStateError.flat();
+      }
+      toast.error(data.title);
+      break;
+    case 401:
+    case 404:
+    case 500:
+      toast.error(data.title);
+      break;
+    default:
+      toast.error("Something unexpected went wrong");
+      break;
+  }
+  return Promise.reject(error.response);
+};
+
 axiosInstance.interceptors.response.use(
   async (response) => {
     await sleep();
     return response;
   },
-  (error) => {
-    const { data, status } = error.response;
-    switch (status) {
-      case 400:
-        if (data.errors) {
-          const modelStateError: string[] = [];
-          for (const key in data.errors) {
-            if (data.errors[key]) {
-              modelStateError.push(data.errors[key]);
-            }
-          }
-          throw modelStateError.flat();
-        }
-        toast.error(data.title);
-        break;
-      case 401:
-      case 404:
-      case 500:
-        toast.error(data.title);
-        break;
-      default:
-        toast.error("Something unexpected went wrong");
-        break;
-    }
-    return Promise.reject(error.response);
-  }
+  handleError
 );
 
 const requests = {
@@ -73,17 +74,29 @@ const createListEndpoint = (endpoint: string, defaultSortBy: string, defaultSort
   return (pageNo: number, pageSize: number) => requests.get(`${endpoint}?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${defaultSortBy}&sortDir=${defaultSortDir}`);
 };
 
+interface Product {
+  productId: number;
+  name: string;
+  // Add other product fields
+}
+
+interface Brand {
+  brandId: number;
+  name: string;
+  // Add other brand fields
+}
+
 const Products = {
   list: createListEndpoint("product", "productId"),
-  addMilk: (product: any) => requests.post("product", product),
-  updateMilk: (product: any) => requests.put("product/update", product),
+  addMilk: (product: Product) => requests.post("product", product),
+  updateMilk: (product: Product) => requests.put("product/update", product),
   delete: (productId: number) => requests.delete(`product/delete/${productId}`),
 };
 
 const Brand = {
   list: createListEndpoint("brand", "brandId"),
-  updateBrand: (brand: any) => requests.put("brand/update", brand),
-  addBrand: (brand: any) => requests.post("brand", brand),
+  updateBrand: (brand: Brand) => requests.put("brand/update", brand),
+  addBrand: (brand: Brand) => requests.post("brand", brand),
   delete: (brandId: number) => requests.delete(`brand/delete/${brandId}`),
 };
 

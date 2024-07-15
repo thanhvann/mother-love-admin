@@ -1,22 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { getUserInfo, login, refreshTokenIfNeeded } from "@/api/auth";
-import { User } from "@/models/User";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { getUserInfo, login, refreshTokenIfNeeded, changePassword } from '@/api/auth';
+import { User } from '@/models/User';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
-  isLoggedIn: boolean;
-  userId: number | null;
-  login: (username: string, password: string) => Promise<void>;
-  logout: () => void;
-  getUserInfo: () => Promise<User | null>;
+    isLoggedIn: boolean;
+    userId: number | null;
+    login: (username: string, password: string) => Promise<void>;
+    logout: () => void;
+    getUserInfo: () => Promise<User | null>;
+    changePassword: (oldPassword: string, newPassword: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  isLoggedIn: false,
-  userId: null,
-  login: async (_username: string, _password: string) => {},
-  logout: () => {},
-  getUserInfo: async () => null,
+    isLoggedIn: false,
+    userId: null,
+    login: async (_username: string, _password: string) => {},
+    logout: () => {},
+    getUserInfo: async () => null,
+    changePassword: async (_oldPassword: string, _newPassword: string) => false
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -62,25 +63,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    setIsLoggedIn(false);
-    setUserId(null);
-  };
+    const handleLogout = () => {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        setIsLoggedIn(false);
+        setUserId(null);
+    };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn,
-        userId,
-        login: handleLogin,
-        logout: handleLogout,
-        getUserInfo,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+    const handleChangePassword = async (oldPassword: string, newPassword: string) => {
+        try {
+            const success = await changePassword(oldPassword, newPassword);
+            return success;
+        } catch (error) {
+            console.error('Failed to change password:', error);
+            return false;
+        }
+    };
+
+    return (
+        <AuthContext.Provider value={{ isLoggedIn, userId, login: handleLogin, logout: handleLogout, getUserInfo, changePassword: handleChangePassword }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };

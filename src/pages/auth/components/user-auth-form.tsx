@@ -57,16 +57,28 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       const userInfo = await getUserInfo();
       if (userInfo) {
         if (
-          userInfo.roleName === "ROLE_STAFF" ||
-          userInfo.roleName === "ROLE_ADMIN"
+          (userInfo.roleName === "ROLE_STAFF" ||
+          userInfo.roleName === "ROLE_ADMIN") && !userInfo.firstLogin
         ) {
           // User has permission, navigate to admin page
           navigate("/admin");
-          console.log( userInfo.roleName);
-        } else {
+
+        }
+        if( (userInfo.roleName === "ROLE_STAFF" ||
+          userInfo.roleName === "ROLE_ADMIN") && userInfo.firstLogin)
+          {
+            navigate("/change-password");
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('isLoggedIn');
+        
+          }
+         else {
           // User does not have permission
           setError("You don't have permission.");
         }
+       
       } else {
         setError("Failed to retrieve user information.");
       }

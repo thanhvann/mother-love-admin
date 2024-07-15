@@ -35,8 +35,8 @@ const ProductPopover: React.FC<ProductPopoverProps> = ({
   selectedProducts,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [pageNo, setPageNo] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageNo] = useState(0);
+  const [pageSize] = useState(10);
 
   useEffect(() => {
     const getProducts = async () => {

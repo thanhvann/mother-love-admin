@@ -120,7 +120,7 @@ const Address = {
   updateDefaultAddress: (userId: number, addressOldId: number, addressNewId: number) => {
     return requests.put(`address/default?userId=${userId}&addressOldId=${addressOldId}&addressNewId=${addressNewId}`, {});
   },
-  updateAddress: (addressId: number, updatedAddress: any) => {
+  updateAddress: (updatedAddress: any) => {
     return requests.put(`address`, updatedAddress);
   },
   // addNewAddress: (newAddress: any) => requests.post(`http://motherlove-api.onrender.com/api/v1/address`, newAddress),

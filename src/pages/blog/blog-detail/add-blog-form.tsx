@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -235,7 +238,7 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
                     <FormField
                       control={form.control}
                       name="productId"
-                      render={({ field }) => (
+                      render={() => (
                         <FormItem>
                           <FormLabel className="block my-2">Product</FormLabel>
                           <FormControl>

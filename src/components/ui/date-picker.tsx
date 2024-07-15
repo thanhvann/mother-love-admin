@@ -13,18 +13,21 @@ interface DatePickerProps {
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
-  name,
+  // name,
   selected,
-  onChange,
+  // onChange,
   placeholderText = "Pick a date",
 }) => {
-  const handleDateChange = (date: Date | null) => {
-    onChange(date);
-  };
+  // const handleDateChange = (date: Date | null) => {
+  //   onChange(date);
+  // };
 
   return (
     <div>
-      <Button variant={"outline"} className="w-[280px] justify-start text-left font-normal">
+      <Button
+        variant={"outline"}
+        className="w-[280px] justify-start text-left font-normal"
+      >
         <CalendarIcon className="mr-2 h-4 w-4" />
         {selected ? format(selected, "PPP") : <span>{placeholderText}</span>}
       </Button>

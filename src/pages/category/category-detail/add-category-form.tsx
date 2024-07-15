@@ -13,17 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { statuses } from "@/components/DataTable/filters";
-import { CategoryType } from "@/schema/categorySchema";
 import React from "react";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import agent from "@/api/agent";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-
-interface Category {}
 
 interface ManageCategoryForm {}
 

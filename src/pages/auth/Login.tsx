@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { UserAuthForm } from "./components/user-auth-form";
-import { Link } from "react-router-dom";
 
 export default function Login() {
   return (
@@ -26,7 +25,7 @@ export default function Login() {
             <div className="flex flex-col space-y-2 text-left">
               <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
               <p className="text-sm text-muted-foreground">
-                Enter your email and password 
+                Enter your email and password
               </p>
             </div>
             <UserAuthForm />

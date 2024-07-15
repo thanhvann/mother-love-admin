@@ -1,24 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
-import axios from "axios";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/DataTable/data-table";
-import { CategoryObj } from "@/models/Category";
 import agent from "@/api/agent";
 import { BrandObj } from "@/models/Brand";
+import { DataTablePagination } from "@/components/DataTable/data-table-pagination";
 
 export const Brand = () => {
   const [data, setData] = useState<BrandObj[]>([]);
   const [pageNo, setPageNo] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState("brandId");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [totalRows, setTotalRows] = useState(0);
+  const [sortBy] = useState("brandId");
+  const [sortDir] = useState<"asc" | "desc">("asc");
+  const [totalPages, setTotalPages] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +25,7 @@ export const Brand = () => {
       try {
         const result = await agent.Brand.list(pageNo, pageSize);
         setData(result.content); // Assuming the data is in the `data` field of the response
+        setTotalPages(result.totalPages);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -54,6 +54,13 @@ export const Brand = () => {
           placeholder="Search by Brand Name.."
         />
       </div>
+      <DataTablePagination
+        currentPage={pageNo}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        setPageNo={setPageNo}
+        setPageSize={setPageSize}
+      />
     </>
   );
 };

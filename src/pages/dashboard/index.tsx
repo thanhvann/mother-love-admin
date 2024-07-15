@@ -1,4 +1,3 @@
-import { Layout } from "@/components/custom/layout";
 import { Button } from "@/components/custom/button";
 import {
   Card,

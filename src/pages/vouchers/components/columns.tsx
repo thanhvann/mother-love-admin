@@ -82,7 +82,7 @@ export const columns: ColumnDef<VoucherObj>[] = [
       <CellAction
         data={row.original}
         onEditSuccess={() => {
-          console.log("Edit success for voucher:", row.original);
+          // console.log("Edit success for voucher:", row.original);
         }}
       />
     ),

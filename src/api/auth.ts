@@ -13,7 +13,7 @@ const isAccessTokenExpired = (accessToken: string): boolean => {
         const currentTime = new Date().getTime();
         return currentTime > expirationTime;
     } catch (error) {
-        console.error('Error decoding access token:', error);
+        // console.error('Error decoding access token:', error);
         return true;
     }
 };
@@ -27,10 +27,8 @@ export const refreshTokenIfNeeded = async (): Promise<boolean> => {
             });
             const newAccessToken = response.data.access_token;
             localStorage.setItem('accessToken', newAccessToken);
-            console.log('Refreshed access token successfully');
             return true;
         } catch (error) {
-            console.error('Failed to refresh access token:', error);
             return false;
         }
     }
@@ -46,10 +44,9 @@ export const login = async (username: string, password: string): Promise<boolean
         const { access_token, refresh_token } = response.data;
         localStorage.setItem('accessToken', access_token);
         localStorage.setItem('refreshToken', refresh_token);
-        console.log('Login successful');
         return true;
     } catch (error) {
-        console.error('Login failed', error);
+        // console.error('Login failed', error);
         return false;
     }
 };
@@ -67,7 +64,7 @@ export const getUserInfo = async (): Promise<User | null> => {
         });
         return response.data as User;
     } catch (error) {
-        console.error('Failed to get user info:', error);
+        // console.error('Failed to get user info:', error);
         return null;
     }
 };
@@ -85,10 +82,9 @@ export const changePassword = async (oldPassword: string, newPassword: string): 
                 Authorization: `Bearer ${accessToken}`
             }
         });
-        console.log('Password changed successfully');
         return true;
     } catch (error) {
-        console.error('Failed to change password:', error);
+        // console.error('Failed to change password:', error);
         return false;
     }
 }
@@ -106,10 +102,9 @@ export const registerStaff = async (staffDetails: { username: string, fullName:s
             }
         });
 
-        console.log('Staff registration successful');
         return true;
     } catch (error) {
-        console.error('Failed to register staff:', error);
+        // console.error('Failed to register staff:', error);
         return false;
     }
 };

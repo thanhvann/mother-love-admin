@@ -57,7 +57,6 @@ export function StaffRegistrationForm({
 
       if (success) {
         // Redirect or show success message
-        console.log("Staff registration successful");
         toast({
           title: "Create successfully!",
           description: "Staff registration successfully",

@@ -54,7 +54,6 @@ export default function EditBrandDialog({ brand }: EditProps) {
 
   async function onSubmit(values: EditFormValues) {
     try {
-      console.log("Submitting values:", values);
       await agent.Brand.updateBrand(values);
       toast({
         title: "Update Brand successfully!",

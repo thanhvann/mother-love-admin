@@ -34,7 +34,6 @@ export const columns: ColumnDef<ProductColumn>[] = [
       const images = Array.isArray(row.original.image)
         ? row.original.image
         : [];
-      // console.log("Image", row.original.image);
 
       return (
         <div className="flex flex-wrap gap-2">

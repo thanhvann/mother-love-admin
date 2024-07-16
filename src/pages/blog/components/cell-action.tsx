@@ -44,7 +44,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         variant: "destructive",
         title: errorMessage,
       });
-      console.log(error);
     } finally {
       setLoading(false);
       setOpen(false);

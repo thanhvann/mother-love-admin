@@ -6,6 +6,7 @@ import {
   IconUsers,
   IconTicket,
   IconMenuOrder,
+  IconReport,
 } from "@tabler/icons-react";
 import { Milk } from "lucide-react";
 
@@ -68,6 +69,12 @@ export const sidelinks: SideLink[] = [
     label: "",
     href: "/admin/blog",
     icon: <IconBrandBlogger size={18} />,
+  },
+  {
+    title: "Reports",
+    label: "",
+    href: "/admin/reports",
+    icon: <IconReport size={18} />,
   },
   // {
   //   title: "Authentication",

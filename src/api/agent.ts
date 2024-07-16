@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 
 const sleep = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const BASE_URL =  "http://localhost:8080/api/v1/";
-// const BASE_URL =  "http://motherlove-api.onrender.com";
+// const BASE_URL =  "http://localhost:8080/api/v1/";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.withCredentials = true;
@@ -128,7 +128,7 @@ const Address = {
   updateAddress: (updatedAddress: any) => {
     return requests.put(`address`, updatedAddress);
   },
-  addNewAddress: (newAddress: any) => requests.post(`http://localhost:8080/api/v1/address`, newAddress),
+  addNewAddress: (newAddress: any) => requests.post(`address`, newAddress),
 };
 
 const Orders = {

@@ -15,30 +15,36 @@ import { Button } from "@/components/custom/button";
 import { cn } from "@/components/lib/utils";
 import { registerStaff } from "@/api/auth"; // Assuming this is where you handle registration
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 interface StaffRegistrationFormProps extends HTMLAttributes<HTMLDivElement> {}
 
 const formSchema = z.object({
-    fullName: z.string().min(1, { message: "Please enter your full name" }),
+  fullName: z.string().min(1, { message: "Please enter your full name" }),
   username: z.string().min(1, { message: "Please enter a username" }),
   email: z.string().email({ message: "Invalid email address" }),
-  phone: z.string().min(10, { message: "Invalid phone number" }), 
-  password: z.string().min(7, { message: "Password must be at least 7 characters long" }),
+  phone: z.string().min(10, { message: "Invalid phone number" }),
+  password: z
+    .string()
+    .min(7, { message: "Password must be at least 7 characters long" }),
   gender: z.string().min(1, { message: "Please select a gender" }), // Example validation, adjust as needed
 });
 
-export function StaffRegistrationForm({ className, ...props }: StaffRegistrationFormProps) {
+export function StaffRegistrationForm({
+  className,
+  ...props
+}: StaffRegistrationFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       email: "",
       fullName: "",
-      password:"Staff@1234",
+      password: "Staff@1234",
       phone: "",
       gender: "",
     },
@@ -52,6 +58,10 @@ export function StaffRegistrationForm({ className, ...props }: StaffRegistration
       if (success) {
         // Redirect or show success message
         console.log("Staff registration successful");
+        toast({
+          title: "Create successfully!",
+          description: "Staff registration successfully",
+        });
         // Example redirect
       } else {
         setError("Failed to register staff. Please try again.");

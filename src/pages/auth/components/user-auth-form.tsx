@@ -69,9 +69,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           {
             navigate("/change-password");
             localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('isLoggedIn');
         
           }
          else {

@@ -150,14 +150,20 @@ const Orders = {
   searchOrdersByStatus: (pageNo: number, pageSize: number, sortBy: string = "orderId", status: string, sortDir: string = "asc") => {
     return requests.get(`orders/search?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&status=${status}&sortDir=${sortDir}`);
   },
-  updateOrder: (orderId: number) => {
-    return requests.put(`orders?orderId=${orderId}`, {});
-  },
-};
+  searchOrderByStatusAndDate: (pageNo: number, pageSize: number, sortBy: string = "orderId", sortDir: string = "asc", status: string, orderDateFrom: string, orderDateTo: string) =>
+    requests.get(`orders/search?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}&status=${status}&orderDateFrom=${orderDateFrom}&orderDateTo=${orderDateTo}`),
+  updateOrder: (orderId: number) => requests.put(`orders?orderId=${orderId}`, {}),
+};            
 
 const Users = {
   list: (pageNo: number, pageSize: number, sortBy: string = "userId", sortDir: string = "asc") => {
     return requests.get(`users?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
+  },
+};
+const Reports = {
+  list: createListEndpoint("reports", "reportId"),
+  getReports: (pageNo: number, pageSize: number, sortBy: string = "reportId", sortDir: string = "asc") => {
+    return requests.get(`reports?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
   },
 };
 
@@ -169,7 +175,8 @@ const agent = {
   Voucher,
   Blog,
   Orders,
-  Users
+  Users,
+  Reports,
 };
 
 export default agent;

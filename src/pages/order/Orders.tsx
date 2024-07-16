@@ -24,10 +24,33 @@ const Orders = () => {
   const fetchData = async () => {
     try {
       let result;
-      if (startDate && endDate) {
-        result = await agent.Orders.searchOrders(pageNo, pageSize, sortBy, sortDir, `${startDate ? startDate + "T00:00:00" : ""}`, `${endDate ? endDate + "T23:59:59" : ""}`);
+      if (startDate && endDate && status) {
+        result = await agent.Orders.searchOrderByStatusAndDate(
+          pageNo,
+          pageSize,
+          sortBy,
+          sortDir,
+          status,
+          `${startDate}T00:00:00`,
+          `${endDate}T23:59:59`
+        );
+      } else if (startDate && endDate) {
+        result = await agent.Orders.searchOrders(
+          pageNo,
+          pageSize,
+          sortBy,
+          sortDir,
+          `${startDate}T00:00:00`,
+          `${endDate}T23:59:59`
+        );
       } else if (status) {
-        result = await agent.Orders.searchOrdersByStatus(pageNo, pageSize, sortBy, status, sortDir);
+        result = await agent.Orders.searchOrdersByStatus(
+          pageNo,
+          pageSize,
+          sortBy,
+          status,
+          sortDir
+        );
       } else {
         result = await agent.Orders.getOrders(pageNo, pageSize, sortBy, sortDir);
       }
@@ -60,7 +83,7 @@ const Orders = () => {
 
   const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPageSize(Number(event.target.value));
-    setPageNo(0); // Reset to first page whenever page size changes
+    setPageNo(0); 
   };
 
   const renderDate = (dateTimeString: string) => {
@@ -74,9 +97,8 @@ const Orders = () => {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    const maxPage = Math.min(pageNo + 3, totalPages); // Display up to pageNo + 3 or totalPages, whichever is smaller
-    const startPage = Math.max(0, maxPage - 3); // Ensure we display exactly 3 pages
-
+    const maxPage = Math.min(pageNo + 3, totalPages); 
+    const startPage = Math.max(0, maxPage - 3); 
     if (startPage > 0) {
       pageNumbers.push(
         <button
@@ -124,10 +146,8 @@ const Orders = () => {
 
   const handleSortChange = (field: string) => {
     if (field === sortBy) {
-      // Toggle sort direction if same field clicked again
       setSortDir(sortDir === "asc" ? "desc" : "asc");
     } else {
-      // Default to ascending order for new field
       setSortBy(field);
       setSortDir("asc");
     }
@@ -135,14 +155,15 @@ const Orders = () => {
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setStatus(event.target.value);
-    setPageNo(0); // Reset to first page whenever status changes
+    setPageNo(0);
   };
+
   const handleCompleteOrder = async (orderId: number) => {
     try {
       await agent.Orders.updateOrder(orderId);
-
-      fetchData(); // Refresh data after updating order status
+      fetchData(); 
     } catch (error) {
+      console.error("Error updating order:", error);
     }
   };
 
@@ -173,14 +194,6 @@ const Orders = () => {
                 className="border-gray-300 text-gray-700 rounded"
               />
             </div>
-            <button
-              onClick={() => {
-                fetchData();
-              }}
-              className="px-4 py-2 border bg-gray-300 text-gray-700 rounded"
-            >
-              Apply Filter
-            </button>
             <button
               onClick={() => {
                 setStartDate("");
@@ -219,7 +232,6 @@ const Orders = () => {
             >
               Date {sortBy === "orderDate" && (sortDir === "asc" ? "▲" : "▼")}
             </button>
-         
             <div>
               <select
                 value={pageSize}

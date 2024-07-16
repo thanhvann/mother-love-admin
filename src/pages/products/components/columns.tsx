@@ -126,6 +126,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => <span>{row.original.price.toLocaleString()}VND</span>,
   },
   {
     accessorKey: "category.categoryName",

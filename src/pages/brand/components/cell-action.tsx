@@ -42,9 +42,16 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       // window.location.reload();
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "An error occurred";
-      toast({
-        title: errorMessage,
-      });
+      if (data.products) {
+        toast({
+          variant: "destructive",
+          title: "There are products belonging to this brand!",
+        });
+      } else {
+        toast({
+          title: `${errorMessage}`,
+        });
+      }
       console.log(error);
     } finally {
       setLoading(false);

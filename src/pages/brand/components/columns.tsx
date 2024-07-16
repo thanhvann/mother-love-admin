@@ -6,12 +6,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Icons } from "@/components/ui/icons";
 import { CellAction } from "./cell-action";
+import { ProductsObj } from "@/models/Product";
 
 export type BrandColumn = {
   brandId: number;
   brandName: string;
   image: string;
-  // products: ProductsObj;
+  products: ProductsObj;
 };
 
 export const columns: ColumnDef<BrandColumn>[] = [

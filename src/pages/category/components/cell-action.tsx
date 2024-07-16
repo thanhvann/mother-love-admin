@@ -41,8 +41,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       });
       // window.location.reload();
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
+      const errorMessage = error.data?.message || "An error occurred";
       toast({
+        variant: "destructive",
         title: errorMessage,
       });
       console.log(error);

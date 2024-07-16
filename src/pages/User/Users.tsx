@@ -88,7 +88,7 @@ const Users: React.FC = () => {
                   Member
                 </option>
               </select>
-              <Button onClick={() => navigate("/admin/vouchers/new")}>
+              <Button onClick={() => navigate("/admin/create-staff")}>
                 Add New
               </Button>
             </>

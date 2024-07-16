@@ -67,12 +67,6 @@ const productSchema = z.object({
   price: z.coerce.number().refine((value) => value > 0, {
     message: "Price must be greater than 0.",
   }),
-  quantityProduct: z.coerce
-    .number()
-    .nonnegative()
-    .refine((value) => value >= 0, {
-      message: "Quantity can not be negative.",
-    }),
   status: z.string(),
   image: z.array(z.string()),
   category: z.object({
@@ -237,19 +231,6 @@ export const ProductForm: React.FC<ManageProductForm> = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Price</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="quantityProduct"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Quantity</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>

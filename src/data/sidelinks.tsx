@@ -8,7 +8,7 @@ import {
   IconMenuOrder,
   IconReport,
 } from "@tabler/icons-react";
-import { Milk } from "lucide-react";
+import { Milk, StoreIcon } from "lucide-react";
 
 export interface NavLink {
   title: string;
@@ -75,6 +75,12 @@ export const sidelinks: SideLink[] = [
     label: "",
     href: "/admin/reports",
     icon: <IconReport size={18} />,
+  },
+  {
+    title: "Stock Transactions",
+    label: "",
+    href: "/admin/stocks",
+    icon: <StoreIcon size={18} />,
   },
   // {
   //   title: "Authentication",

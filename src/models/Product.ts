@@ -10,5 +10,4 @@ export interface ProductsObj {
       image: string[],
       category: CategoryObj,
       brand:BrandObj,
-      quantityProduct: number
     }

@@ -158,6 +158,13 @@ const Reports = {
     return requests.get(`reports?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`);
   },
 };
+const StockTransaction = {
+  list: createListEndpoint("stock_transactions", "stockTransactionId"),
+  importProduct: (newProduct: any) => requests.post(`stock_transactions`, newProduct)
+}
+const Supplier = {
+  list: createListEndpoint("suppliers", "supplierId"),
+}
 
 const agent = {
   Products,
@@ -169,6 +176,8 @@ const agent = {
   Orders,
   Users,
   Reports,
+  StockTransaction,
+  Supplier
 };
 
 export default agent;

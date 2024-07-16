@@ -20,6 +20,8 @@ import SignupStaff from "@/pages/auth/Sign-up-staff";
 import { ProductForm } from "@/pages/products/product-detail/add-product-form";
 import { BrandForm } from "@/pages/brand/brand-detail/add-brand-form";
 import Reports from "@/pages/reports/Reports";
+import { StocksTransaction } from "@/pages/stock-transaction/StockTransaction";
+import { StockForm } from "@/pages/stock-transaction/stock-detail/add-stock-form";
 
 const PrivateRoute = ({ element, ...rest }: any) => {
   const { isLoggedIn } = useAuth();
@@ -35,7 +37,6 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Login />,
-  
   },
   {
     path: "/change-password",
@@ -108,6 +109,14 @@ const router = createBrowserRouter([
       {
         path: "/admin/newBlog",
         element: <AddBlog />,
+      },
+      {
+        path: "/admin/newStock",
+        element: <StockForm />,
+      },
+      {
+        path: "/admin/stocks",
+        element: <StocksTransaction />,
       },
     ],
   },

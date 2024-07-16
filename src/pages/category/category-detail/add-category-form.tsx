@@ -54,10 +54,10 @@ export const AddCategory: React.FC<ManageCategoryForm> = () => {
         // setToastMessage(error.response.data.message || "An error occurred");
         console.error("Error creating category:", error.response.data);
       } else {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred";
+        const errorMessage = error.data?.message || "An error occurred";
         toast({
           title: errorMessage,
+          variant: "destructive",
         });
         console.error("Error creating category:", error);
       }

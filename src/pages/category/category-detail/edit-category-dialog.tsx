@@ -57,10 +57,10 @@ export default function EditCategoryDialog({ category }: EditProps) {
         // setToastMessage(error.response.data.message || "An error occurred");
         console.error("Error updating category:", error.response.data);
       } else {
-        const errorMessage =
-          error.response?.data?.message || "An error occurred";
+        const errorMessage = error.data?.message || "An error occurred";
         toast({
           title: errorMessage,
+          variant: "destructive",
         });
         console.error("Error updating category:", error);
       }

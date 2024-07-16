@@ -55,8 +55,8 @@ export const BrandForm: React.FC = () => {
       }
       navigate("/admin/brand");
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast({ title: errorMessage });
+      const errorMessage = error.data?.message || "An error occurred";
+      toast({ title: errorMessage, variant: "destructive" });
       console.error("Error managing brand:", error);
     }
   };

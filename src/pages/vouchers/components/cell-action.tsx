@@ -38,9 +38,10 @@ const CellAction: React.FC<CellActionProps> = ({ data, onEditSuccess }) => {
         title: "Voucher deleted successfully!",
       });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
+      const errorMessage = error.data?.message || "An error occurred";
       toast({
         title: errorMessage,
+        variant: "destructive",
       });
       console.error("Error deleting voucher:", error);
     } finally {
@@ -66,7 +67,7 @@ const CellAction: React.FC<CellActionProps> = ({ data, onEditSuccess }) => {
         onConfirm={onConfirmDelete}
         loading={loading}
       />
-      
+
       {/* Edit voucher dialog */}
       <Dialog open={editDialogOpen}>
         <DialogContent>
@@ -88,7 +89,11 @@ const CellAction: React.FC<CellActionProps> = ({ data, onEditSuccess }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => navigator.clipboard.writeText(data.voucherId.toString())}>
+          <DropdownMenuItem
+            onClick={() =>
+              navigator.clipboard.writeText(data.voucherId.toString())
+            }
+          >
             <Icons.copy className="mr-2 h-4 w-4" />
             Copy Voucher ID
           </DropdownMenuItem>
@@ -97,7 +102,10 @@ const CellAction: React.FC<CellActionProps> = ({ data, onEditSuccess }) => {
             <Icons.edit className="mr-2 h-4 w-4" />
             Edit Details
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpenDeleteModal(true)} className="text-red-600">
+          <DropdownMenuItem
+            onClick={() => setOpenDeleteModal(true)}
+            className="text-red-600"
+          >
             <Icons.delete className="mr-2 h-4 w-4" />
             Delete Voucher
           </DropdownMenuItem>

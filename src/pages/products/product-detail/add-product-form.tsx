@@ -63,13 +63,16 @@ interface Brand {
 const productSchema = z.object({
   productId: z.number().optional(),
   productName: z.string().min(1, { message: "Product Name Required" }),
-  description: z.string(),
+  description: z.string().min(1, { message: "Description Required" }),
   price: z.coerce.number().refine((value) => value > 0, {
     message: "Price must be greater than 0.",
   }),
-  quantityProduct: z.coerce.number().min(1, {
-    message: "Quantity Required.",
-  }),
+  quantityProduct: z.coerce
+    .number()
+    .nonnegative()
+    .refine((value) => value >= 0, {
+      message: "Quantity can not be negative.",
+    }),
   status: z.string(),
   image: z.array(z.string()),
   category: z.object({
@@ -154,8 +157,8 @@ export const ProductForm: React.FC<ManageProductForm> = () => {
       }
       navigate("/admin/milk");
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
-      toast({ title: errorMessage });
+      const errorMessage = error.data?.message || "An error occurred";
+      toast({ title: errorMessage, variant: "destructive" });
       console.error("Error managing product:", error);
     }
   };

@@ -123,9 +123,10 @@ export const AddBlog: React.FC<ManageBlogForm> = () => {
       }
       navigate("/admin/blog");
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
+      const errorMessage = error.data?.message || "An error occurred";
       toast({
         title: errorMessage,
+        variant: "destructive",
       });
       console.error("Error creating/updating blog:", error);
     }

@@ -43,9 +43,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         title: "Product deleted successfully!",
       });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "An error occurred";
+      const errorMessage = error.data?.message || "An error occurred";
       toast({
         title: errorMessage,
+        variant: "destructive",
       });
       console.error("Error deleting product:", error);
     } finally {

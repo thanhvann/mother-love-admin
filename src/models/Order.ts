@@ -28,7 +28,7 @@ export interface OrderDetail {
 export interface OrderDto {
     orderId: number;
     orderDate: string;
-    status: number;
+    status: String;
     totalAmount: number;
     afterTotalAmount: number;
     feedBack: boolean;

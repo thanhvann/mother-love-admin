@@ -14,18 +14,43 @@ const Orders = () => {
   const [totalOrders, setTotalOrders] = useState(0);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
-  }, [pageNo, pageSize, sortBy, sortDir, startDate, endDate]);
+  }, [pageNo, pageSize, sortBy, sortDir, startDate, endDate, status]);
 
   const fetchData = async () => {
     try {
       let result;
-      if (startDate && endDate) {
-        result = await agent.Orders.searchOrders(pageNo, pageSize, sortBy, sortDir, `${startDate ? startDate + "T00:00:00" : ""}`, `${endDate ? endDate + "T23:59:59" : ""}`);
-
+      if (startDate && endDate && status) {
+        result = await agent.Orders.searchOrderByStatusAndDate(
+          pageNo,
+          pageSize,
+          sortBy,
+          sortDir,
+          status,
+          `${startDate}T00:00:00`,
+          `${endDate}T23:59:59`
+        );
+      } else if (startDate && endDate) {
+        result = await agent.Orders.searchOrders(
+          pageNo,
+          pageSize,
+          sortBy,
+          sortDir,
+          `${startDate}T00:00:00`,
+          `${endDate}T23:59:59`
+        );
+      } else if (status) {
+        result = await agent.Orders.searchOrdersByStatus(
+          pageNo,
+          pageSize,
+          sortBy,
+          status,
+          sortDir
+        );
       } else {
         result = await agent.Orders.getOrders(pageNo, pageSize, sortBy, sortDir);
       }
@@ -51,13 +76,14 @@ const Orders = () => {
   const handlePageClick = (pageNumber: number) => {
     setPageNo(pageNumber);
   };
+
   const handleViewOrder = (orderId: number) => {
-    navigate(`/admin/orders/${orderId}`); 
+    navigate(`/admin/orders/${orderId}`);
   };
 
   const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPageSize(Number(event.target.value));
-    setPageNo(0); // Reset to first page whenever page size changes
+    setPageNo(0); 
   };
 
   const renderDate = (dateTimeString: string) => {
@@ -71,9 +97,8 @@ const Orders = () => {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    const maxPage = Math.min(pageNo + 3, totalPages); // Display up to pageNo + 3 or totalPages, whichever is smaller
-    const startPage = Math.max(0, maxPage - 3); // Ensure we display exactly 3 pages
-
+    const maxPage = Math.min(pageNo + 3, totalPages); 
+    const startPage = Math.max(0, maxPage - 3); 
     if (startPage > 0) {
       pageNumbers.push(
         <button
@@ -121,12 +146,24 @@ const Orders = () => {
 
   const handleSortChange = (field: string) => {
     if (field === sortBy) {
-      // Toggle sort direction if same field clicked again
       setSortDir(sortDir === "asc" ? "desc" : "asc");
     } else {
-      // Default to ascending order for new field
       setSortBy(field);
       setSortDir("asc");
+    }
+  };
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(event.target.value);
+    setPageNo(0);
+  };
+
+  const handleCompleteOrder = async (orderId: number) => {
+    try {
+      await agent.Orders.updateOrder(orderId);
+      fetchData(); 
+    } catch (error) {
+      console.error("Error updating order:", error);
     }
   };
 
@@ -138,47 +175,50 @@ const Orders = () => {
       <Separator />
       <div className="px-4 py-1">
         <div className="flex justify-between mb-4 items-center">
-        
           <div className="flex space-x-4 mb-4 items-center">
-          <div className="flex items-center space-x-2">
-            <label className="text-sm text-gray-500">Start Date:</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="border-gray-300 text-gray-700 rounded"
-            />
+            <div className="flex items-center space-x-2">
+              <label className="text-sm text-gray-500">Start Date:</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="border-gray-300 text-gray-700 rounded"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <label className="text-sm text-gray-500">End Date:</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="border-gray-300 text-gray-700 rounded"
+              />
+            </div>
+            <button
+              onClick={() => {
+                setStartDate("");
+                setEndDate("");
+                fetchData();
+              }}
+              className="px-4 py-2 border bg-gray-300 text-gray-700 rounded"
+            >
+              Reset
+            </button>
           </div>
-          <div className="flex items-center space-x-2">
-            <label className="text-sm text-gray-500">End Date:</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+          <div className="flex space-x-2 items-center">
+            <span className="text-sm text-gray-500">Filter by Status:</span>
+            <select
+              value={status}
+              onChange={handleStatusChange}
               className="border-gray-300 text-gray-700 rounded"
-            />
-          </div>
-          <button
-            onClick={() => {
-              fetchData();
-            }}
-            className="px-4 py-2 border bg-gray-300 text-gray-700 rounded"
-          >
-            Apply Filter
-          </button>
-          <button
-            onClick={() => {
-              setStartDate("");
-              setEndDate("");
-              fetchData();
-            }}
-            className="px-4 py-2 border bg-gray-300 text-gray-700 rounded"
-          >
-            Reset
-          </button>
-         
-        </div>
-          <div className="flex space-x-2">
+            >
+              <option value="">All</option>
+              <option value="CANCELLED">Cancelled</option>
+              <option value="PRE_ORDER">Pre-Order</option>
+              <option value="CONFIRMED">Confirmed</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="PENDING">Pending</option>
+            </select>
             <span className="text-sm text-gray-500">Sort by:</span>
             <button
               onClick={() => handleSortChange("orderId")}
@@ -192,28 +232,20 @@ const Orders = () => {
             >
               Date {sortBy === "orderDate" && (sortDir === "asc" ? "▲" : "▼")}
             </button>
-            <button
-              onClick={() => handleSortChange("status")}
-              className={`px-2 py-1 border ${sortBy === "status" ? 'bg-gray-500 text-white' : 'bg-gray-300 text-gray-700'} rounded`}
-            >
-              Status {sortBy === "status" && (sortDir === "asc" ? "▲" : "▼")}
-            </button>
             <div>
-            <select
-              value={pageSize}
-              onChange={handlePageSizeChange}
-              className="border-gray-300 text-gray-700 rounded"
-            >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </select>
-            
-          </div>
+              <select
+                value={pageSize}
+                onChange={handlePageSizeChange}
+                className="border-gray-300 text-gray-700 rounded"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
+            </div>
           </div>
         </div>
-      
         <table className="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
@@ -236,13 +268,21 @@ const Orders = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.orderDto.afterTotalAmount}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.orderDto.feedBack ? "Yes" : "No"}</td>
                 <td>
+                  {order.orderDto.status === "CONFIRMED" && (
                     <button
-                      className="px-4 py-2 border bg-gray-300 text-gray-700 rounded"
-                      onClick={() => handleViewOrder(order.orderDto.orderId)}
+                      className="px-4 py-2 border bg-gray-300 text-gray-700 rounded mr-2"
+                      onClick={() => handleCompleteOrder(order.orderDto.orderId)}
                     >
-                      View
+                      Complete
                     </button>
-                  </td>
+                  )}
+                  <button
+                    className="px-4 py-2 border bg-gray-300 text-gray-700 rounded"
+                    onClick={() => handleViewOrder(order.orderDto.orderId)}
+                  >
+                    View
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

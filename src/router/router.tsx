@@ -19,6 +19,7 @@ import Users from "@/pages/User/Users";
 import SignupStaff from "@/pages/auth/Sign-up-staff";
 import { ProductForm } from "@/pages/products/product-detail/add-product-form";
 import { BrandForm } from "@/pages/brand/brand-detail/add-brand-form";
+import Reports from "@/pages/reports/Reports";
 
 const PrivateRoute = ({ element, ...rest }: any) => {
   const { isLoggedIn } = useAuth();
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/orders",
         element: <Orders />,
+      },
+      {
+        path: "/admin/reports",
+        element: <Reports />,
       },
       {
         path: "/admin/orders/:orderId",

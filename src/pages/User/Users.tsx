@@ -34,7 +34,7 @@ const Users: React.FC = () => {
   const fetchUsers = async (page: number, size: number) => {
     setLoading(true);
     try {
-      const response = await agent.User.list(page, size);
+      const response = await agent.Users.list(page, size);
       setUsers(response.content);
       setTotalPages(response.totalPages);
     } catch (error) {

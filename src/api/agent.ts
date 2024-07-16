@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 
@@ -75,29 +77,18 @@ const createListEndpoint = (endpoint: string, defaultSortBy: string, defaultSort
   return (pageNo: number, pageSize: number) => requests.get(`${endpoint}?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=${defaultSortBy}&sortDir=${defaultSortDir}`);
 };
 
-interface Product {
-  productId: number;
-  name: string;
-  // Add other product fields
-}
-
-interface Brand {
-  brandId: number;
-  name: string;
-  // Add other brand fields
-}
 
 const Products = {
   list: createListEndpoint("product", "productId"),
-  addMilk: (product: Product) => requests.post("product", product),
-  updateMilk: (product: Product) => requests.put("product/update", product),
+  addMilk: (product: any) => requests.post("product", product),
+  updateMilk: (product: any) => requests.put("product/update", product),
   delete: (productId: number) => requests.delete(`product/delete/${productId}`),
 };
 
 const Brand = {
   list: createListEndpoint("brand", "brandId"),
-  updateBrand: (brand: Brand) => requests.put("brand/update", brand),
-  addBrand: (brand: Brand) => requests.post("brand", brand),
+  updateBrand: (brand: any) => requests.put("brand/update", brand),
+  addBrand: (brand: any) => requests.post("brand", brand),
   delete: (brandId: number) => requests.delete(`brand/delete/${brandId}`),
 };
 

@@ -38,7 +38,17 @@ export const columns: ColumnDef<StockTransaction>[] = [
   },
   {
     accessorKey: "stockTransactionDate",
-    header: "Import Date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Import Date
+          <Icons.sort className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       return formatDate(row.original.stockTransactionDate);
     },

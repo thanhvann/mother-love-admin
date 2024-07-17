@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { LoaderCircle, Plus } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/DataTable/data-table";
@@ -20,7 +20,7 @@ const Vouchers = () => {
   const [sortDir] = useState<"asc" | "desc">("asc");
   const [shouldRefresh] = useState<boolean>(false);
   const [totalPages, setTotalPages] = useState(0);
-
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +34,17 @@ const Vouchers = () => {
       setTotalPages(result.totalPages);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoaderCircle />
+      </div>
+    );
+  }
   return (
     <>
       <div className="flex items-center justify-between pt-4">

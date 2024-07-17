@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { columns } from "./components/columns";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { LoaderCircle, Plus } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/components/DataTable/data-table";
@@ -17,6 +17,7 @@ export const Blog = () => {
   const [sortBy] = useState("categoryId");
   const [sortDir] = useState<"asc" | "desc">("asc");
   const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   const formatDate = (timestamp: string): string => {
@@ -49,11 +50,20 @@ export const Blog = () => {
         setData(formattedData); // Assuming the data is in the `data` field of the response
         setTotalPages(result.totalPages);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     getData();
   }, [pageNo, pageSize, sortBy, sortDir]);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoaderCircle />
+      </div>
+    );
+  }
   return (
     <>
       <div className="flex items-center justify-between pt-4">
